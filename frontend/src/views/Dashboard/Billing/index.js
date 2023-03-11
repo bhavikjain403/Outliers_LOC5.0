@@ -165,7 +165,7 @@ function Billing() {
         <Box>
           <Title>Maximum Discount Uses</Title>
           <CheckboxGroup onChange={setValue} value={value}>
-            <Stack>
+            <Stack mb={"0.8em"}>
               <Checkbox>
                 Limit number of times this discount can be used
               </Checkbox>
@@ -207,7 +207,7 @@ function Billing() {
           <Checkbox paddingY={3}>Set End Date</Checkbox>
           <Stack direction="column">
             <Text>End Date</Text>
-            <Input type="date"></Input>
+            <Input type="date" width={"35%"}></Input>
           </Stack>
         </Box>
       </Card>
