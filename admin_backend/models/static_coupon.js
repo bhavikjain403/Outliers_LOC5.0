@@ -15,7 +15,7 @@ const staticCouponSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
+     // unique: true,
       lowercase: true,
       match: [
         /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/,
@@ -67,12 +67,11 @@ const staticCouponSchema = new mongoose.Schema(
       trim: true,
     },
 
-    creator: [
+    creator:
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       }
-    ],
   },
   { timestamps: true }
 );

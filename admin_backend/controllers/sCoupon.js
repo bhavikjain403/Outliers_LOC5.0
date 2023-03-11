@@ -15,10 +15,13 @@ var QRCode = require('qrcode')
 
 const generateCoupon = async (req, res) => {
 
-  const company = req.body.company
-  company = company.substring(0,3)
+
 
   try {
+    var company = req.body.company_name
+    company = company.substring(0,3)
+
+
     const code = voucher_codes.generate({
         pattern: `ICO-${company}-####`,
     });
@@ -34,14 +37,16 @@ const generateCoupon = async (req, res) => {
       });
       return;
     }else{
-      req.body['code'] = code[0]
-      let newCoupon = new SCoupon(req.body);
+      var temp = req.body
+      temp['code'] = code[0]
+
+      let newCoupon = new SCoupon(temp);
       await newCoupon.save();
-      res.status(400).json({
+      res.status(200).json({
         message: "Coupon Created Successfully !",
         status:true,
         data: {
-          coupon: coupon,
+          coupon: newCoupon,
         },
       });
     }
@@ -60,12 +65,22 @@ const verifyCoupon = async (req, res) => {
   try {
     let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
 
-    if(coupon.redeem_count < coupon.max_count && Date.now() < coupon.expires_at && !coupon.expired){
-      res.status(200).json({
-        message: "Verifiied ! ",
-        status: true
+    if(!coupon){
+      res.status(400).json({
+        message: "Coupon not found ",
+        status: false,
+        data : {}
       });
+    }else{
+      if(coupon.redeem_count < coupon.max_count && Date.now() < coupon.expires_at && !coupon.expired){
+        res.status(200).json({
+          message: "Verifiied ! ",
+          status: true
+        });
+      }
     }
+
+
   }
   catch(err) {
     res.status(400).json({
