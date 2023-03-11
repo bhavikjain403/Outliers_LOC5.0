@@ -4,15 +4,21 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {
   Flex,
   Table,
+  HStack,
   Tbody,
+  Button,
   Text,
   Th,
   Thead,
   Tr,
   useColorModeValue,
+  Input,
+  Stack,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
-import {BsFillChatLeftDotsFill} from 'react-icons/bs'
-import React, { useState } from "react";
+import { BsFillChatLeftDotsFill } from "react-icons/bs";
+import React, { useState, ChangeEvent } from "react";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
@@ -21,9 +27,9 @@ import { useEffect } from "react";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 import { createTheme, colors, ThemeProvider } from "@mui/material";
+import { AttachmentIcon, CheckIcon } from "@chakra-ui/icons";
 
 function Tables() {
-
   const columns = [
     { field: "code", headerName: "Code", width: 125 },
     { field: "active", headerName: "Active", type: "boolean", width: 80 },
@@ -47,29 +53,29 @@ function Tables() {
       width: 180,
     },
     {
-      field: 'actions',
-      type: 'actions',
+      field: "actions",
+      type: "actions",
       width: 50,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="Add"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="Functionality"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="pls"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
       ],
@@ -79,25 +85,91 @@ function Tables() {
   const { user } = useAuth();
   const [coupons, setCoupons] = useState([]);
 
+  const [file, setFile] = useState();
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      console.log(e.target.files[0]);
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = () => {
+    console.log("Hello");
+    if (!file) {
+      return;
+    }
+    console.log("Hello");
+
+    // 👇 Uploading the file using the fetch API to the server
+    fetch("https://httpbin.org/post", {
+      method: "POST",
+      body: file,
+      // 👇 Set headers manually for single file upload
+      headers: {
+        "content-type": file.type,
+        "content-length": `${file.size}`, // 👈 Headers need to be a string
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  };
+
   useEffect(() => {
-    CouponApi.getAllStaticCoupons(user.data.user.company)
+    CouponApi.getAllStaticCoupons(user?.data?.user?.company)
       .then((response) => {
         console.log(response.data.data);
-        const couponseFormatted = response.data.data.map((item, index)=>({
-          ...item, id:index, createdAt: new Date(item.createdAt), expires_at: new Date(item.expires_at), active: !item.expired
-        }))
-        setCoupons(couponseFormatted)
+        const couponseFormatted = response.data.data.map((item, index) => ({
+          ...item,
+          id: index,
+          createdAt: new Date(item.createdAt),
+          expires_at: new Date(item.expires_at),
+          active: !item.expired,
+          count: item.max_count,
+        }));
+        setCoupons(couponseFormatted);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
       });
   }, []);
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card mb={"1em"}>
+        <Stack direction="column">
+          <Text fontWeight="bold" fontSize="xl">
+            Input User Data File or use previously uploaded File:{" "}
+          </Text>
+
+          <InputGroup>
+            <InputLeftElement children={<AttachmentIcon />} />
+            <Input
+              type="file"
+              border={0}
+              width={"35%"}
+              onChange={handleFileChange}
+            ></Input>
+            <Button colorScheme="linkedin" onClick={handleUpload}>
+              Upload{" "}
+              <span>
+                {"  "} {<CheckIcon />}
+              </span>
+            </Button>
+          </InputGroup>
+
+          <HStack>
+            <Button colorScheme="teal">Send Coupons on Mail</Button>
+            <Button colorScheme="teal">Send Coupons on SMS</Button>
+          </HStack>
+        </Stack>
+      </Card>
       <Card>
-        <Text fontSize={30} fontWeight={700} mb={5}>Static Coupons</Text>
-      <DataTable rows={coupons} columns={columns} />
+        <Text fontSize={30} fontWeight={700} mb={5}>
+          Static Coupons
+        </Text>
+        <DataTable rows={coupons} columns={columns} />
       </Card>
     </Flex>
   );
