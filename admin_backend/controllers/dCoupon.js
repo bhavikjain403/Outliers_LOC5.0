@@ -52,7 +52,7 @@ const generateDCoupon = async (req, res) => {
   }
 }
 
-const verifyDCoupon = async (req, res) => {
+const   verifyDCoupon = async (req, res) => {
   try {
     let coupon = await DCoupon.findOne({ code: req.body.coupon_code, company_name: req.body.company_name});
     if (!coupon) {
@@ -61,7 +61,7 @@ const verifyDCoupon = async (req, res) => {
         status: false,
         data: {}
       });
-    } else if(coupon.user_list.includes(req.body.uid)==false || coupon.expired==false || Date.now()<coupon.expires_at) {
+    } else if(coupon.user_list.includes(req.body.uid)==false || coupon.expired==true || Date.now()<coupon.expires_at) {
         res.status(400).json({
             message: "Coupon is not available for you",
             status: false,
@@ -101,10 +101,17 @@ const getAllDynamicCoupons = async (req, res) => {
     var ans = []
     if (coupons.length>0) {
       for( var i=0;i<coupons.length;i++) {
-        if(user in coupons[i].user_list){
-          ans.push(coupons[i])
+        var temp=coupons[i].user_list
+        if(temp.length){
+          for(var i=0;i<temp.length;i++){
+            if(temp[i]==user){
+              ans.push(coupons[i])
+              break
+            }
+          }
         }
       }
+      console.log(ans)
       if (ans.length>0) {
         res.status(200).json({
           message: "You have the following coupons !",
@@ -148,22 +155,24 @@ const redeemDCoupon = async (req, res) => {
         data: {}
       });
     } else {
-      if (req.body.uid in coupon.user_list) {
-        for(var i = 0; i < coupon.user_list.length; i++) {
-          if ( coupon.user_list[i]==req.body.uid) { 
-            coupon.user_list.splice(i, 1); 
-            break
-          }
+      var flag=0
+      for(var i = 0; i < coupon.user_list.length; i++) {
+        if ( coupon.user_list[i]==req.body.uid) { 
+          coupon.user_list.splice(i, 1); 
+          flag=1
+          break
         }
+      }
+      if (flag==1) {
         coupon.redeem_count += 1
         coupon.markModified('user_list')
         coupon.save()
 
-        res.status(200).json({
-          message: "Redeemed Successfully !!",
-          status: true,
-          data: {}
-        });
+          res.status(200).json({
+            message: "Redeemed Successfully !!",
+            status: true,
+            data: {}
+          });
       } else {
         res.status(400).json({
           message: "Coupon not verified !! ",

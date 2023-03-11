@@ -46,6 +46,7 @@ const dynamicCouponSchema = new mongoose.Schema(
 
     redeem_count : {
       type: Number,
+      default:0,
       trim: true,
     },
 
