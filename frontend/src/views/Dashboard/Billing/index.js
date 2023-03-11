@@ -27,8 +27,9 @@ import {
 import BackgroundCard1 from "assets/img/BackgroundCard1.png";
 import Card from "components/Card/Card";
 import { MastercardIcon, VisaIcon } from "components/Icons/Icons";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPaypal, FaWallet } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
 import { RiMastercardFill } from "react-icons/ri";
 import {
   billingData,
@@ -54,6 +55,16 @@ function Billing() {
   let year = date.getFullYear();
 
   let currentDate = `${day}-${month}-${year}`;
+
+  const [collectionList, setCollectionList] = useState([]);
+  const collectionRef = useRef();
+
+  useEffect(() => {
+    collectionRef.current.value = "";
+  }, [collectionList]);
+
+  const [discountType, setDiscountType] = useState('percent')
+  const [discount, setDiscount] = useState()
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -87,107 +98,58 @@ function Billing() {
         <Flex direction={"column"}>
           <Title>Value</Title>
           <HStack w={"100%"}>
-            <Button rounded={"md"} px={10}>
+            <Button rounded={"md"} px={10} onClick={()=>setDiscountType("percent")} variant={"outline"} style={{backgroundColor:discountType=="percent"?"rgb(237, 242, 247)":"white"}}>
               Percentage
             </Button>
-            <Button rounded={"md"} px={10}>
+            <Button rounded={"md"} px={10} onClick={()=>setDiscountType("rupees")} variant={"outline"} style={{backgroundColor:discountType=="rupees"?"rgb(237, 242, 247)":"white"}}>
               Fixed Amount
             </Button>
             <InputGroup>
-              <Input />
-              <InputRightElement children="%"></InputRightElement>
+              <Input onChange={(e)=>setDiscount(e.target.value)} />
+              <InputRightElement children={discountType=="percent"?"%":"₹"}></InputRightElement>
             </InputGroup>
           </HStack>
-          <Title></Title>
         </Flex>
         <Divider marginY={5} borderColor="#fff" />
         <Box>
-          <Text fontSize="l" fontWeight="bold" marginY={2}>
-            Applies to
-          </Text>
-          <RadioGroup onChange={setValue} value={value}>
-            <Radio value="1">Specific Collections</Radio>
-            <Stack direction="column">
-              <Radio value="2">Specific Products</Radio>
-            </Stack>
-          </RadioGroup>
+          <Title>Applies to</Title>
+          <Text fontWeight={500}>Collection Name</Text>
           <HStack marginY={4}>
             <InputGroup>
               <InputLeftElement children={<SearchIcon />}></InputLeftElement>
-              <Input placeholder="Search Collections" />
+              <Input placeholder="Search Collections" ref={collectionRef} />
             </InputGroup>
-            <Button rounded={"md"}>Browse</Button>
+            <Button
+              rounded={"md"}
+              onClick={() => {
+                setCollectionList((prev) => [
+                  ...prev,
+                  collectionRef.current.value,
+                ]);
+              }}
+            >
+              Browse
+            </Button>
           </HStack>
-        </Box>
-      </Card>
-
-      <Card mb={"1em"}>
-        <Box>
-          <Title>Minimum Purchase Requirements</Title>
-          <RadioGroup onChange={setValue} value={value}>
-            <Radio value="1">No Minimum Requirements</Radio>
-            <Stack direction="column">
-              <Radio value="2">Minimum Purchase Amount (₹)</Radio>
-              <InputGroup>
-                <InputLeftElement children="₹" paddingx={2} />
-                <Input width="150px" />
-              </InputGroup>
-              <Text color="gray" marginY={2}>
-                Applies only to selected products
-              </Text>
-            </Stack>
-            <Radio value="3">Minimum Quantity of Items</Radio>
-          </RadioGroup>
-        </Box>
-      </Card>
-
-      <Card mb={"1em"}>
-        <Box>
-          <Title>Customer Eligibility</Title>
-          <RadioGroup onChange={setValue} value={value}>
-            <Radio value="1">All Customers</Radio>
-            <Stack direction="column">
-              <Radio value="2">Specific Customer Segments</Radio>
-            </Stack>
-            <Radio value="3">Specific Customers</Radio>
-          </RadioGroup>
-          <HStack>
-            <InputGroup marginY={5}>
-              <InputLeftElement children={<SearchIcon />} />
-              <Input />
-            </InputGroup>
-            <Button rounded={"md"}>Browse</Button>
-          </HStack>
-        </Box>
-      </Card>
-
-      <Card mb={"1em"}>
-        <Box>
-          <Title>Maximum Discount Uses</Title>
-          <CheckboxGroup onChange={setValue} value={value}>
-            <Stack mb={"0.8em"}>
-              <Checkbox>
-                Limit number of times this discount can be used
-              </Checkbox>
-              <Input width={60} focusBorderColor="black.400"></Input>
-            </Stack>
-            <Stack direction="column">
-              <Checkbox>Limit to one per user</Checkbox>
-            </Stack>
-          </CheckboxGroup>
-        </Box>
-      </Card>
-
-      <Card mb={"1em"}>
-        <Box>
-          <Title>Combinations</Title>
-          <Text mb={"0.8em"}>This product can be combined with:</Text>
-          <CheckboxGroup onChange={setValue} value={value}>
-            <Stack direction="column">
-              <Checkbox>Other Products</Checkbox>
-              <Checkbox>Shipping Discountsr</Checkbox>
-            </Stack>
-          </CheckboxGroup>
+          <Box>
+            {collectionList.map((item, index) => {
+              return (
+                <Button key={index} mx={1}>
+                  {item}{" "}
+                  <MdDeleteForever
+                    onClick={() =>
+                      setCollectionList((prev) =>
+                        prev.filter((collItem) => collItem != item)
+                      )
+                    }
+                    style={{ marginLeft: "0.5rem" }}
+                    size={30}
+                  />{" "}
+                  <button></button>
+                </Button>
+              );
+            })}
+          </Box>
         </Box>
       </Card>
 
