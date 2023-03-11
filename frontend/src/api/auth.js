@@ -2,7 +2,7 @@ import axios from "./index";
 
 class AuthApi {
   static Login = (data) => {
-    return axios.post(`${base}/login`, data);
+    return axios.post(`${base}/auth/login`, data);
   };
 
   static Register = (data) => {
@@ -14,6 +14,6 @@ class AuthApi {
   };
 }
 
-let base = "users";
+let base = "";
 
 export default AuthApi;

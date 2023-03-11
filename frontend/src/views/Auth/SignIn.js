@@ -43,7 +43,7 @@ function SignIn() {
   const handleSubmit = e => {
     e.preventDefault();
     AuthApi.Login(formData).then(response => {
-      if(response.data.success) {
+      if(response.data) {
         return setProfile(response);
       } else {
         setError(response.data.msg)
@@ -57,10 +57,11 @@ function SignIn() {
   }
 
   const setProfile = (response) => {
-    let user = { ...response.data.user };
-    user.token = response.data.token;
+    console.log("setting profile")
+    let user = { ...response.data };
+    console.log(user.data.user)
+    setUser(user.data.user);
     user = JSON.stringify(user);
-    setUser(user);
     localStorage.setItem("user", user);
     return history.push("/dashboard");
   };
