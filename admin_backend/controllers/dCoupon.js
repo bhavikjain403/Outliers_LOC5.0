@@ -236,24 +236,18 @@ const sendCouponMail = async (req, res) => {
 
 const getCsv = async (req, res) => {
   try {
-    console.log(req.files);
-    // var file = await req.body
-    // console.log(file)
-    // fs.writeFile("input.csv", file, (err) => {
-    //     if (err)
-    //       console.log(err);
-    //     else {
-    //       console.log("File written successfully\n");
-    //     }
-    //   });
-    //   csv().fromFile(csvFilePath).then((jsonObj)=>{
-    //       console.log(jsonObj);
-    //   })
-      res.status(200).json({
-        message: "Coupon Created Successfully !",
-        status: true,
-      });
-  }
+    var file = await req.files.userdata.path;
+    var j =await csv().fromFile(file)
+    var emails = []
+    for(var i=0;i<j.length;i++){
+      emails.push(j[i]["Email"])
+    }
+    res.status(200).json({
+      message: "Conversion success",
+      status: true,
+      data: emails
+    });
+        }
   catch (err) {
     res.status(400).json({
       message: err.message,
