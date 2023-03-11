@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use('/api/login', authRoutes);
 
-app.use(middleware.unknownEndpointHandler);
+// app.use(middleware.unknownEndpointHandler);
 app.use(middleware.errorHandler);
 
 module.exports = app;
