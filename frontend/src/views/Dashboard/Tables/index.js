@@ -11,7 +11,7 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
-import {BsFillChatLeftDotsFill} from 'react-icons/bs'
+import { BsFillChatLeftDotsFill } from "react-icons/bs";
 import React, { useState } from "react";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
@@ -23,7 +23,6 @@ import { useAuth } from "auth-context/auth.context";
 import { createTheme, colors, ThemeProvider } from "@mui/material";
 
 function Tables() {
-
   const columns = [
     { field: "code", headerName: "Code", width: 125 },
     { field: "active", headerName: "Active", type: "boolean", width: 80 },
@@ -47,29 +46,29 @@ function Tables() {
       width: 180,
     },
     {
-      field: 'actions',
-      type: 'actions',
+      field: "actions",
+      type: "actions",
       width: 50,
       getActions: (params) => [
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="Add"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="Functionality"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
           icon={<BsFillChatLeftDotsFill />}
           label="pls"
           //TODO: add functionality to this button
-          onClick={()=>console.log("hi")}
+          onClick={() => console.log("hi")}
           showInMenu
         />,
       ],
@@ -78,26 +77,56 @@ function Tables() {
 
   const { user } = useAuth();
   const [coupons, setCoupons] = useState([]);
+  const [dCoupons, setDCoupons] = useState([]);
 
   useEffect(() => {
-    CouponApi.getAllStaticCoupons(user?.data?.user?.company)
+    console.log(user);
+    CouponApi.getAllStaticCoupons(user?.data?.user?.company || user?.company)
       .then((response) => {
-        console.log(response.data.data);
-        const couponseFormatted = response.data.data.map((item, index)=>({
-          ...item, id:index, createdAt: new Date(item.createdAt), expires_at: new Date(item.expires_at), active: !item.expired
-        }))
-        setCoupons(couponseFormatted)
+        console.log(response);
+        const couponseFormatted = response.data.data.map((item, index) => ({
+          ...item,
+          id: index,
+          createdAt: new Date(item.createdAt),
+          expires_at: new Date(item.expires_at),
+          active: !item.expired,
+        }));
+        setCoupons(couponseFormatted);
       })
       .catch((error) => {
-        console.log(error)
+        console.log(error);
+      });
+
+    CouponApi.getAllDynamicCoupons(user?.data?.user?.company || user?.company)
+      .then((response) => {
+        console.log(response);
+        const couponseFormatted = response.data.data.map((item, index) => ({
+          ...item,
+          id: index,
+          createdAt: new Date(item.createdAt),
+          expires_at: new Date(item.expires_at),
+          active: !item.expired,
+        }));
+        setDCoupons(couponseFormatted);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   }, []);
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card>
-        <Text fontSize={30} fontWeight={700} mb={5}>Static Coupons</Text>
-      <DataTable rows={coupons} columns={columns} />
+        <Text fontSize={30} fontWeight={700} mb={5}>
+          Static Coupons
+        </Text>
+        <DataTable rows={coupons} columns={columns} />
+      </Card>
+      <Card>
+        <Text fontSize={30} fontWeight={700} mb={5}>
+          Dynamic Coupons
+        </Text>
+        <DataTable rows={dCoupons} columns={columns} />
       </Card>
     </Flex>
   );
