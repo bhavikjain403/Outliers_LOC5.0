@@ -65,13 +65,12 @@ const verifyCoupon = async (req, res) => {
         data: {}
       });
     } else {
-      if (coupon.redeem_count < coupon.max_count && Date.now() < coupon.expires_at && !coupon.expired) {
+      if ((!(req.body.uid in coupon.users) || coupon.users[req.body.uid] < coupon.max_count) && Date.now() < coupon.expires_at && !coupon.expired) {
         if (coupon.product_categories.includes(req.body.category)) {
-          // User can use coupon only 5 times
           if (req.body.uid in coupon.users) {
-            if (coupon.users[req.body.uid] > 5) {
+            if (coupon.users[req.body.uid] > coupon.max_count) {
               res.status(400).json({
-                message: "Already redeemed 5 times",
+                message: "Already redeemed maximum times",
                 status: false,
                 data: {}
               });
