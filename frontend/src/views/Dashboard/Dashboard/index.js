@@ -91,6 +91,46 @@ export default function Dashboard() {
     ],
   };
 
+  const addSymbols = (e) => {
+    var suffixes = ["", "K", "M", "B"];
+    var order = Math.max(
+      Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)),
+      0
+    );
+    if (order > suffixes.length - 1) order = suffixes.length - 1;
+    var suffix = suffixes[order];
+    return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+  };
+
+  const optionsBar = {
+    animationEnabled: true,
+    theme: "light2",
+    title: {
+      text: "Most Popular Categories of Products",
+    },
+    axisX: {
+      title: "Categories",
+      reversed: true,
+    },
+    axisY: {
+      title: "Purchases Made in that category",
+      includeZero: true,
+      labelFormatter: addSymbols,
+    },
+    data: [
+      {
+        type: "bar",
+        dataPoints: [
+          { y: 1212, label: "Shoes" },
+          { y: 932, label: "Hats" },
+          { y: 805, label: "Women" },
+          { y: 563, label: "Men" },
+          { y: 376, label: "Kids" },
+        ],
+      },
+    ],
+  };
+
   useEffect(() => {
     CouponApi.getAllStaticCoupons(user?.data?.user?.company)
       .then((response) => {
@@ -135,6 +175,15 @@ export default function Dashboard() {
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
+
+      {/* Popular Categories Chart */}
+      <Grid height={"450px"} paddingY={5}>
+        <Card height={"420px"} paddingY={5}>
+          <Flex>
+            <CanvasJSChart options={optionsBar} />
+          </Flex>
+        </Card>
+      </Grid>
 
       {/* PIE CHART */}
       <Grid height={"450px"} paddingY={5}>
