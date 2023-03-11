@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <title>Email for OTP Verification</title>
+    <style type="text/css">
+      #logo {
+        width: 6rem;
+        margin-bottom: 1.2rem;
+      }
+      body {
+
+        font-family: "Roboto", sans-serif;
+      }
+      .container {
+        padding: 4rem 3rem 20px 3.5rem;
+        background-color: #fff;
+        width: 20rem;
+        height: 20rem;
+        border-radius: 1px;
+        position: absolute;
+      }
+
+      h2 {
+        margin-bottom: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img
+        src="https://imgur.com/a/cshCdmv"
+        alt="Incento Logo"
+        id="logo"
+      />
+
+      <h2>Coupon Code</h2>
+      <p>Aloha! <%=name%>!</p>
+      <p>Please use this coupon code on your next purchase:</p>
+      <img src = <%= image_url %> />
+    </div>
+  </body>
+</html>
