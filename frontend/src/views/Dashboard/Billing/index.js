@@ -22,6 +22,11 @@ import {
   InputRightElement,
   Checkbox,
   CheckboxGroup,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
 } from "@chakra-ui/react";
 // Assets
 import BackgroundCard1 from "assets/img/BackgroundCard1.png";
@@ -45,6 +50,8 @@ import PaymentStatistics from "./components/PaymentStatistics";
 import Transactions from "./components/Transactions";
 import { FiSearch } from "react-icons/fi";
 import { SearchIcon } from "@chakra-ui/icons";
+import CouponApi from "api/coupons";
+import { useAuth } from "auth-context/auth.context";
 
 function Billing() {
   const [value, setValue] = React.useState("1");
@@ -63,8 +70,47 @@ function Billing() {
     collectionRef.current.value = "";
   }, [collectionList]);
 
-  const [discountType, setDiscountType] = useState('percent')
-  const [discount, setDiscount] = useState()
+  const [discountType, setDiscountType] = useState("percent");
+  const [discount, setDiscount] = useState();
+
+  const startDateRef = useRef();
+  const endDateRef = useRef();
+  const couponRef = useRef();
+  const redeemsNum = useRef();
+
+  const { user } = useAuth();
+
+  function generateCoupon() {
+    console.log(user)
+    const data = {
+      company_name: user?.company,
+      code: couponRef.current.value,
+      max_count: parseInt(redeemsNum.current.value),
+      creator_email: user?.email,
+      product_categories: collectionList,
+      expires_at: new Date(Date.parse(endDateRef.current.value)),
+      expired: false,
+      verify_count: 0,
+      discount: discountType=="amount"? Math.max(0,discount): Math.max(0,Math.min(100,discount)),
+      type:discountType,
+      users: {},
+    };
+    CouponApi.generateStaticCoupon(data)
+      .then((response) => {
+        console.log(response.data.data);
+        const couponseFormatted = response.data.data.map((item, index) => ({
+          ...item,
+          id: index,
+          createdAt: new Date(item.createdAt),
+          expires_at: new Date(item.expires_at),
+          active: !item.expired,
+        }));
+        setCoupons(couponseFormatted);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -85,7 +131,7 @@ function Billing() {
               Discount Code
             </Text>
             <HStack marginBottom={2}>
-              <Input></Input>
+              <Input ref={couponRef}></Input>
               <Button rounded={"md"}>Generate</Button>
             </HStack>
             <Text fontSize={15} textColor="gray">
@@ -98,18 +144,49 @@ function Billing() {
         <Flex direction={"column"}>
           <Title>Value</Title>
           <HStack w={"100%"}>
-            <Button rounded={"md"} px={10} onClick={()=>setDiscountType("percent")} variant={"outline"} style={{backgroundColor:discountType=="percent"?"rgb(237, 242, 247)":"white"}}>
+            <Button
+              rounded={"md"}
+              px={10}
+              onClick={() => setDiscountType("percent")}
+              variant={"outline"}
+              style={{
+                backgroundColor:
+                  discountType == "percent" ? "rgb(237, 242, 247)" : "white",
+              }}
+            >
               Percentage
             </Button>
-            <Button rounded={"md"} px={10} onClick={()=>setDiscountType("rupees")} variant={"outline"} style={{backgroundColor:discountType=="rupees"?"rgb(237, 242, 247)":"white"}}>
+            <Button
+              rounded={"md"}
+              px={10}
+              onClick={() => setDiscountType("amount")}
+              variant={"outline"}
+              style={{
+                backgroundColor:
+                  discountType == "amount" ? "rgb(237, 242, 247)" : "white",
+              }}
+            >
               Fixed Amount
             </Button>
-            <InputGroup>
-              <Input onChange={(e)=>setDiscount(e.target.value)} />
-              <InputRightElement children={discountType=="percent"?"%":"₹"}></InputRightElement>
-            </InputGroup>
+            {/* <InputGroup> */}
+              <NumberInput style={{flex:1}} >
+              <NumberInputField onChange={(e) => setDiscount(e.target.value)} />
+              <InputRightElement
+                children={discountType == "percent" ? "%" : "₹"}
+              ></InputRightElement>
+              </NumberInput>
+            {/* </InputGroup> */}
           </HStack>
         </Flex>
+        <Divider marginY={5} borderColor="#fff" />
+        <Title>Max Redeems</Title>
+        <NumberInput>
+          <NumberInputField ref={redeemsNum} />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
         <Divider marginY={5} borderColor="#fff" />
         <Box>
           <Title>Applies to</Title>
@@ -156,29 +233,22 @@ function Billing() {
       <Card mb={"1em"}>
         <Box>
           <Title>Active Dates</Title>
-          <Flex>
+          {/* <Flex>
             <Stack direction="column" marginX={4}>
               <Text>Start Date</Text>
-              <Input type="date"></Input>
+              <Input type="datetime-local" ref={startDateRef}></Input>
             </Stack>
-            <Stack direction="column">
-              <Text>Start Time (EST)</Text>
-              <Input type="time"></Input>
-            </Stack>
-          </Flex>
-          <Checkbox paddingY={3}>Set End Date</Checkbox>
+          </Flex> */}
+          {/* <Checkbox paddingY={3}>Set End Date</Checkbox> */}
           <Flex>
             <Stack direction="column" marginX={4}>
               <Text>End Date</Text>
-              <Input type="date"></Input>
-            </Stack>
-            <Stack direction="column">
-              <Text>End Time (EST)</Text>
-              <Input type="time"></Input>
+              <Input type="datetime-local" ref={endDateRef}></Input>
             </Stack>
           </Flex>
         </Box>
       </Card>
+      <Button onClick={() => generateCoupon()}>Save</Button>
     </Flex>
   );
 }

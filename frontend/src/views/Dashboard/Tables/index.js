@@ -80,7 +80,7 @@ function Tables() {
   const [coupons, setCoupons] = useState([]);
 
   useEffect(() => {
-    CouponApi.getAllStaticCoupons(user.data.user.company)
+    CouponApi.getAllStaticCoupons(user?.data?.user?.company)
       .then((response) => {
         console.log(response.data.data);
         const couponseFormatted = response.data.data.map((item, index)=>({
