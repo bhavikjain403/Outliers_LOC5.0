@@ -10,6 +10,7 @@ import {
   InputGroup,
   Input,
   Stack,
+  Button,
 } from "@chakra-ui/react";
 // assets
 import peopleImage from "assets/img/people-image.png";
@@ -99,7 +100,7 @@ export default function Dashboard() {
           label: item.code,
         }));
         setCoupons(couponsFormatted);
-        console.log(couponsFormatted);
+        // console.log(couponsFormatted);
       })
       .catch((error) => {
         console.log(error);
@@ -153,7 +154,7 @@ export default function Dashboard() {
       >
         <Grid>
           <Card>
-            <Text fontWeight="xl">
+            <Text fontsize="xl" fontWeigt="bold">
               Predict Customer Retention on Previous Data
             </Text>
             <InputGroup>
@@ -195,6 +196,7 @@ export default function Dashboard() {
                 </Text>
               </Stack>
             </InputGroup>
+            <Button type="submit">Predict Customer Retention</Button>
           </Card>
         </Grid>
         <SalesOverview
