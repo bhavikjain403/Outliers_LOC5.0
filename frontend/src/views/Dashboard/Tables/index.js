@@ -84,6 +84,7 @@ function Tables() {
 
   const { user } = useAuth();
   const [coupons, setCoupons] = useState([]);
+  const [dCoupons, setDCoupons] = useState([]);
 
   const [file, setFile] = useState();
 
@@ -117,18 +118,35 @@ function Tables() {
   };
 
   useEffect(() => {
-    CouponApi.getAllStaticCoupons(user?.data?.user?.company)
+    console.log(user);
+    CouponApi.getAllStaticCoupons(user?.data?.user?.company || user?.company)
       .then((response) => {
-        console.log(response.data.data);
+        console.log(response);
         const couponseFormatted = response.data.data.map((item, index) => ({
           ...item,
           id: index,
           createdAt: new Date(item.createdAt),
           expires_at: new Date(item.expires_at),
           active: !item.expired,
-          count: item.max_count,
         }));
         setCoupons(couponseFormatted);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    CouponApi.getAllDynamicCoupons(user?.data?.user?.company || user?.company)
+      .then((response) => {
+        console.log(response);
+        const couponseFormatted = response.data.data.map((item, index) => ({
+          ...item,
+          id: index,
+          createdAt: new Date(item.createdAt),
+          expires_at: new Date(item.expires_at),
+          active: !item.expired,
+        }));
+        setDCoupons(couponseFormatted);
+
       })
       .catch((error) => {
         console.log(error);
@@ -170,6 +188,12 @@ function Tables() {
           Static Coupons
         </Text>
         <DataTable rows={coupons} columns={columns} />
+      </Card>
+      <Card>
+        <Text fontSize={30} fontWeight={700} mb={5}>
+          Dynamic Coupons
+        </Text>
+        <DataTable rows={dCoupons} columns={columns} />
       </Card>
     </Flex>
   );
