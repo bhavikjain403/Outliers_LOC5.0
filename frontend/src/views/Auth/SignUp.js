@@ -44,16 +44,13 @@ function SignUp() {
   const handleSubmit = e => {
     e.preventDefault();
     AuthApi.Register(formData).then(response => {
-      if(response.data.success) {
+      if(response.data) {
         return history.push("/auth/signin");
       } else {
-        setError(response.data.msg)
+        setError("There has been an error.");
       }
     }).catch(error => {
-      if (error.response) {
-        return setError(error.response.data.msg);
-      }
-      return setError("There has been an error.");
+      setError("There has been an error.");
     })
   }
 
@@ -127,15 +124,7 @@ function SignUp() {
             mb='22px'>
             Register
           </Text>
-          <Text
-            fontSize='lg'
-            color='gray.400'
-            fontWeight='bold'
-            textAlign='center'
-            mb='22px'>
-            add your credentials
-          </Text>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
               Name
             </FormLabel>
@@ -147,7 +136,21 @@ function SignUp() {
               placeholder='Your full name'
               mb='24px'
               size='lg'
-              name="username"
+              name="name"
+              onChange={handleChange}
+            />
+            <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
+              Company Name
+            </FormLabel>
+            <Input
+              fontSize='sm'
+              ms='4px'
+              borderRadius='15px'
+              type='text'
+              placeholder='Your full name'
+              mb='24px'
+              size='lg'
+              name="company"
               onChange={handleChange}
             />
             <FormLabel ms='4px' fontSize='sm' fontWeight='normal'>
