@@ -11,8 +11,8 @@ import {
   Tr,
   useColorModeValue,
 } from "@chakra-ui/react";
+import {BsFillChatLeftDotsFill} from 'react-icons/bs'
 import React, { useState } from "react";
-import FileCopyIcon from '@mui/icons-material/FileCopy';
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
@@ -52,21 +52,21 @@ function Tables() {
       width: 50,
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<FileCopyIcon />}
+          icon={<BsFillChatLeftDotsFill />}
           label="Add"
           //TODO: add functionality to this button
           onClick={()=>console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
-          icon={<FileCopyIcon />}
+          icon={<BsFillChatLeftDotsFill />}
           label="Functionality"
           //TODO: add functionality to this button
           onClick={()=>console.log("hi")}
           showInMenu
         />,
         <GridActionsCellItem
-          icon={<FileCopyIcon />}
+          icon={<BsFillChatLeftDotsFill />}
           label="pls"
           //TODO: add functionality to this button
           onClick={()=>console.log("hi")}
