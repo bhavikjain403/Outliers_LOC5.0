@@ -135,7 +135,6 @@ export default function Dashboard() {
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
-
       {/* PIE CHART */}
       <Grid height={"450px"} paddingY={5}>
         <Card height={"420px"} paddingY={5}>
@@ -143,8 +142,7 @@ export default function Dashboard() {
             <CanvasJSChart options={options} />
           </Flex>
         </Card>
-      </Grid>
-
+      </Grid>    
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}

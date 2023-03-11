@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 // Assets
-import signInImage from "assets/img/signInImage.png";
+import signInImage from "assets/img/incento.png";
 
 import AuthApi from "../../api/auth";
 import { useAuth } from "../../auth-context/auth.context";
@@ -113,27 +113,18 @@ function SignIn() {
               mt={{ md: "150px", lg: "80px" }}
             >
               <Heading color={titleColor} fontSize="32px" mb="10px">
-                Welcome Back
+                Welcome To Incento !!
               </Heading>
-              <Text
-                mb="36px"
-                ms="4px"
-                color={textColor}
-                fontWeight="bold"
-                fontSize="14px"
-              >
-                add your credentials
-              </Text>
-              <FormControl>
+              <FormControl style={{marginTop:"50px"}}>
                 <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
                   Email
                 </FormLabel>
                 <Input
                   borderRadius="15px"
+                  borderColor="black"
                   mb="24px"
                   fontSize="sm"
                   type="text"
-                  placeholder="Your email adress"
                   size="lg"
                   onChange={handleChange}
                   name="email"
@@ -144,16 +135,16 @@ function SignIn() {
                 </FormLabel>
                 <Input
                   borderRadius="15px"
+                  borderColor="black"
                   mb="36px"
                   fontSize="sm"
                   type="password"
-                  placeholder="Your password"
                   size="lg"
                   onChange={handleChange}
                   name="password"
                   value={formData?.password}
                 />
-                <FormControl display="flex" alignItems="center">
+                {/* <FormControl display="flex" alignItems="center">
                   <Switch id="remember-login" colorScheme="teal" me="10px" />
                   <FormLabel
                     htmlFor="remember-login"
@@ -163,7 +154,7 @@ function SignIn() {
                   >
                     Remember me
                   </FormLabel>
-                </FormControl>
+                </FormControl> */}
                 <Flex
                   flexDirection="column"
                   justifyContent="center"
@@ -177,14 +168,14 @@ function SignIn() {
                 </Flex>
                 <Button
                   onClick={handleSubmit}
-                  fontSize="10px"
+                  fontSize="15px"
                   type="submit"
                   bg="teal.300"
                   w="100%"
                   h="45"
                   mb="20px"
                   color="white"
-                  mt="20px"
+                  mt="10px"
                   _hover={{
                     bg: "teal.200",
                   }}
@@ -226,6 +217,7 @@ function SignIn() {
           right="0px"
         >
           <Box
+            bg="teal.100"
             bgImage={signInImage}
             w="100%"
             h="100%"

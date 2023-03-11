@@ -10,8 +10,9 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 const { sendEmail, generateotp } = require("../utils/email");
 const axios = require("axios");
-var QRCode = require('qrcode')
-
+var QRCode = require('qrcode');
+var csv = require("csvtojson");
+const fs = require("fs");
 
 const generateDCoupon = async (req, res) => {
   try {
@@ -157,8 +158,8 @@ const redeemDCoupon = async (req, res) => {
     } else {
       var flag=0
       for(var i = 0; i < coupon.user_list.length; i++) {
-        if ( coupon.user_list[i]==req.body.uid) { 
-          coupon.user_list.splice(i, 1); 
+        if ( coupon.user_list[i]==req.body.uid) {
+          coupon.user_list.splice(i, 1);
           flag=1
           break
         }
@@ -233,11 +234,35 @@ const sendCouponMail = async (req, res) => {
 }
 
 
+const getCsv = async (req, res) => {
+  try {
+    var file = await req.files.userdata.path;
+    var j =await csv().fromFile(file)
+    var emails = []
+    for(var i=0;i<j.length;i++){
+      emails.push(j[i]["Email"])
+    }
+    res.status(200).json({
+      message: "Conversion success",
+      status: true,
+      data: emails
+    });
+        }
+  catch (err) {
+    res.status(400).json({
+      message: err.message,
+      status: false
+    });
+  }
+}
+
+
 // Exporting modules
 module.exports = {
   generateDCoupon,
   sendCouponMail,
   verifyDCoupon,
   redeemDCoupon,
-  getAllDynamicCoupons
+  getAllDynamicCoupons,
+  getCsv
 };
