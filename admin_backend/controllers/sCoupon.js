@@ -55,8 +55,7 @@ const generateCoupon = async (req, res) => {
 const verifyCoupon = async (req, res) => {
   try {
 
-    let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
-
+    let coupon = await SCoupon.findOne({ code: req.body.coupon_code, company_name:req.body.company_name });
     if (!coupon) {
       res.status(400).json({
         message: "Coupon not found ",
@@ -64,7 +63,20 @@ const verifyCoupon = async (req, res) => {
         data: {}
       });
     } else {
-      if ((!(req.body.uid in coupon.users) || coupon.users[req.body.uid] < coupon.max_count) && Date.now() < coupon.expires_at && !coupon.expired) {
+      if(coupon.users==null){
+        coupon.verify_count += 1
+        coupon.users={}
+        coupon.users[req.body.uid]=0
+        coupon.markModified('users')
+        coupon.save();
+
+        res.status(200).json({
+          message: "Verified ! ",
+          status: true
+        });
+        return
+      }
+      else if ((!(req.body.uid in coupon.users) || coupon.users[req.body.uid] < coupon.max_count) && Date.now() < coupon.expires_at && !coupon.expired) {
         if (coupon.product_categories.includes(req.body.category)) {
           if (req.body.uid in coupon.users) {
             if (coupon.users[req.body.uid] > coupon.max_count) {
