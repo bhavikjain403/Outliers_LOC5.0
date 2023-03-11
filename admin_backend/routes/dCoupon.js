@@ -21,6 +21,6 @@ router.post("/verify", verifyDCoupon);
 router.post("/redeem", redeemDCoupon);
 router.get("/getAllDynamic", getAllDynamicCoupons);
 router.post("/sendmail", sendCouponMail);
-router.post("/csv", upload.single('userdata') ,getCsv);
+router.post("/csv", getCsv);
 // Exporting Modules
 module.exports = router;

@@ -158,8 +158,8 @@ const redeemDCoupon = async (req, res) => {
     } else {
       var flag=0
       for(var i = 0; i < coupon.user_list.length; i++) {
-        if ( coupon.user_list[i]==req.body.uid) { 
-          coupon.user_list.splice(i, 1); 
+        if ( coupon.user_list[i]==req.body.uid) {
+          coupon.user_list.splice(i, 1);
           flag=1
           break
         }
@@ -236,18 +236,19 @@ const sendCouponMail = async (req, res) => {
 
 const getCsv = async (req, res) => {
   try {
-    var file = await req.body
-    console.log(file)
-    fs.writeFile("input.csv", file, (err) => {
-        if (err)
-          console.log(err);
-        else {
-          console.log("File written successfully\n");
-        }
-      });
-      csv().fromFile(csvFilePath).then((jsonObj)=>{
-          console.log(jsonObj);
-      })
+    console.log(req.files);
+    // var file = await req.body
+    // console.log(file)
+    // fs.writeFile("input.csv", file, (err) => {
+    //     if (err)
+    //       console.log(err);
+    //     else {
+    //       console.log("File written successfully\n");
+    //     }
+    //   });
+    //   csv().fromFile(csvFilePath).then((jsonObj)=>{
+    //       console.log(jsonObj);
+    //   })
       res.status(200).json({
         message: "Coupon Created Successfully !",
         status: true,
