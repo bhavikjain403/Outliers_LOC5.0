@@ -68,22 +68,22 @@ export default function AuthNavbar(props) {
     mainText = "white";
     navbarPosition = "absolute";
   }
-  var brand = (
-    <Link
-      href={`${process.env.PUBLIC_URL}/#/`}
-      target="_blank"
-      display="flex"
-      lineHeight="100%"
-      fontWeight="bold"
-      justifyContent="center"
-      alignItems="center"
-      color={mainText}
-    >
-      <CreativeTimLogo w="32px" h="32px" me="10px" />
-      <Text fontSize="sm" mt="3px">
-        {logoText}
-      </Text>
-    </Link>
+  var brand = (<></>
+    // <Link
+    //   href={`${process.env.PUBLIC_URL}/#/`}
+    //   target="_blank"
+    //   display="flex"
+    //   lineHeight="100%"
+    //   fontWeight="bold"
+    //   justifyContent="center"
+    //   alignItems="center"
+    //   color={mainText}
+    // >
+    //   <CreativeTimLogo w="32px" h="32px" me="10px" />
+    //   <Text fontSize="sm" mt="3px">
+    //     {logoText}
+    //   </Text>
+    // </Link>
   );
   var linksAuth = (
     <HStack display={{ sm: "none", lg: "flex" }}>
@@ -169,7 +169,7 @@ export default function AuthNavbar(props) {
       maxW="90%"
       alignItems="center"
     >
-      <Flex w="100%" justifyContent={{ sm: "start", lg: "space-between" }}>
+      <Flex w="100%" justifyContent={{ sm: "center", lg: "center" }}>
         {brand}
         <Box
           ms={{ base: "auto", lg: "0px" }}
@@ -184,7 +184,7 @@ export default function AuthNavbar(props) {
           />
         </Box>
         {linksAuth}
-        <Link target="_blank" href="https://appseed.us/product/purity-dashboard/api-server-nodejs/react/">
+        {/* <Link target="_blank" href="https://appseed.us/product/purity-dashboard/api-server-nodejs/react/">
           <Button
             bg={bgButton}
             color={colorButton}
@@ -199,7 +199,7 @@ export default function AuthNavbar(props) {
           >
             Free Download
           </Button>
-        </Link>
+        </Link> */}
       </Flex>
     </Flex>
   );
