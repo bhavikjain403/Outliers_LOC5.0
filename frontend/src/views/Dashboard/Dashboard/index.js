@@ -193,7 +193,6 @@ export default function Dashboard() {
           </Flex>
         </Card>
       </Grid>
-
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
