@@ -16,10 +16,13 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import GitHubButton from "react-github-btn";
+import IconBox from "components/Icons/IconBox";
+import { QuestionIcon } from "@chakra-ui/icons";
 import { Separator } from "components/Separator/Separator";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { FaTwitter, FaFacebook } from "react-icons/fa";
+import SidebarHelpImage from "../../assets/img/SidebarHelpImage.png";
 
 export default function Configurator(props) {
   const { secondary, isOpen, onClose, fixed, ...rest } = props;
@@ -54,7 +57,7 @@ export default function Configurator(props) {
           <DrawerHeader pt="24px" px="24px">
             <DrawerCloseButton />
             <Text fontSize="xl" fontWeight="bold" mt="16px">
-              Purity UI Configurator
+              Customize Dashboard
             </Text>
             <Text fontSize="md" mb="16px">
               See your dashboard options.
@@ -99,32 +102,11 @@ export default function Configurator(props) {
                   </Button>
                 </Flex>
               </Box>
-              <Box
-                display={fixedDisplay}
-                justifyContent="space-between "
-                mb="16px"
-              >
-                <Text fontSize="md" fontWeight="600" mb="4px">
-                  Navbar Fixed
-                </Text>
-                <Switch
-                  colorScheme="teal"
-                  isChecked={switched}
-                  onChange={(event) => {
-                    if (switched === true) {
-                      props.onSwitch(false);
-                      setSwitched(false);
-                    } else {
-                      props.onSwitch(true);
-                      setSwitched(true);
-                    }
-                  }}
-                />
-              </Box>
               <Flex
                 justifyContent="space-between"
                 alignItems="center"
                 mb="24px"
+                mt="10px"
               >
                 <Text fontSize="md" fontWeight="600" mb="4px">
                   Dark/Light
@@ -136,91 +118,50 @@ export default function Configurator(props) {
 
               <Separator />
               <Box mt="24px">
-                <Text fontSize="md" fontWeight="600">
-                  Sidenav Type
-                </Text>
-                <Text fontSize="sm" mb="16px">
-                  Choose between 2 different sidenav types.
-                </Text>
-                <Box>
-                  <Link
-                    href="https://appseed.us/product/purity-dashboard/api-server-nodejs/react/"
-                    w="100%"
-                    mb="16px"
-                  >
-                    <Button
-                      w="100%"
-                      mb="16px"
-                      bg={bgButton}
-                      color={colorButton}
-                      fontSize="xs"
-                      variant="no-hover"
-                      px="30px"
-                    >
-                      Free Download
-                    </Button>
-                  </Link>
-                  <Link
-                    href="https://github.com/app-generator/react-purity-dashboard"
-                    w="100%"
-                  >
-                    <Button
-                      w="100%"
-                      bg={secondaryButtonBg}
-                      border="1px solid"
-                      borderColor={secondaryButtonBorder}
-                      color={secondaryButtonColor}
-                      fontSize="xs"
-                      variant="no-hover"
-                      px="20px"
-                      mb="16px"
-                    >
-                      <Text textDecorationColor="none">Documentation</Text>
-                    </Button>
-                  </Link>
-                </Box>
-                <Flex
-                  justifyContent="center"
-                  alignItems="center"
-                  w="100%"
-                  mb="16px"
-                >
-                  <GitHubButton
-                    href="https://github.com/app-generator/react-purity-dashboard"
-                    data-icon="octicon-star"
-                    data-show-count="true"
-                    aria-label="Star creativetimofficial/purity-ui-dashboard on GitHub"
-                  >
-                    Star
-                  </GitHubButton>
-                </Flex>
-                <Box w="100%">
-                  <Text mb="6px" textAlign="center">
-                    Thank you for sharing!
-                  </Text>
-                  <Flex justifyContent="center" alignContent="center">
-                    <Link
-                      isExternal="true"
-                      href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fpurity-ui-dashboard&text=Check%20Purity%20UI%20Dashboard%20made%20by%20%40CreativeTim%20and%20%40simmmple_web%20%23webdesign%20%23dashboard%20%23chakra"
-                    >
-                      <Button
-                        colorScheme="twitter"
-                        leftIcon={<FaTwitter />}
-                        me="10px"
-                      >
-                        <Text>Tweet</Text>
-                      </Button>
-                    </Link>
-                    <Link
-                      isExternal="true"
-                      href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fpurity-ui-dashboard"
-                    >
-                      <Button colorScheme="facebook" leftIcon={<FaFacebook />}>
-                        <Text>Share</Text>
-                      </Button>
-                    </Link>
-                  </Flex>
-                </Box>
+              <Flex
+      borderRadius="15px"
+      flexDirection="column"
+      bgImage={SidebarHelpImage}
+      justifyContent="flex-start"
+      alignItems="start"
+      boxSize="border-box"
+      p="16px"
+      h="170px"
+      w="100%"
+    >
+      <IconBox width="35px" h="35px" bg="white" mb="auto">
+        <QuestionIcon color="teal.300" h="18px" w="18px" />
+      </IconBox>
+      <Text fontSize="sm" color="white" fontWeight="bold">
+        Need help?
+      </Text>
+      <Text fontSize="xs" color="white" mb="10px">
+        Please check our docs
+      </Text>
+      <Link
+        w="100%"
+        href="https://github.com/app-generator/react-purity-dashboard"
+      >
+        <Button
+          fontSize="10px"
+          fontWeight="bold"
+          w="100%"
+          bg="white"
+          _hover="none"
+          _active={{
+            bg: "white",
+            transform: "none",
+            borderColor: "transparent",
+          }}
+          _focus={{
+            boxShadow: "none",
+          }}
+          color="black"
+        >
+          API DOCS
+        </Button>
+      </Link>
+    </Flex>
               </Box>
             </Flex>
           </DrawerBody>

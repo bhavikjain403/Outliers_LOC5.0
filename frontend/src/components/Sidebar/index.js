@@ -48,7 +48,7 @@ function Sidebar(props) {
           borderRadius={sidebarRadius}
         >
           <SidebarContent routes={routes}
-        logoText={"Incento"}
+        logoText={"Incnto"}
         display="none"
         sidebarVariant={sidebarVariant}
         />

@@ -14,6 +14,7 @@ import { Separator } from "components/Separator/Separator";
 import { SidebarHelp } from "components/Sidebar/SidebarHelp";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
+import signInImage from "../../assets/img/incento.png";
 
 // this function creates the links and collapses that appear in the sidebar (left menu)
 
@@ -178,26 +179,22 @@ const SidebarContent = ({ logoText, routes }) => {
 
   return (
     <>
-        <Box pt={"25px"} mb="12px">
+        <Box>
       <Link
         href={`${process.env.PUBLIC_URL}/#/`}
         target="_blank"
         display="flex"
         lineHeight="100%"
-        mb="30px"
         fontWeight="bold"
         justifyContent="center"
         alignItems="center"
         fontSize="11px"
       >
-        <CreativeTimLogo w="32px" h="32px" me="10px" />
-        <Text fontSize="sm" mt="3px">
-          {logoText}
-        </Text>
+        <img src={signInImage}/>
       </Link>
       <Separator></Separator>
     </Box>
-          <Stack direction="column" mb="40px">
+          <Stack direction="column" mb="10px">
             <Box>{links}</Box>
           </Stack>
           <SidebarHelp />
