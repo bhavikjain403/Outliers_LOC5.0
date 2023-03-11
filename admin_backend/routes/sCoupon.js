@@ -7,7 +7,8 @@ const upload = require("../middleware/upload");
 const {
 generateCoupon,
 verifyCoupon,
-redeemCoupon
+redeemCoupon,
+getAllStaticCoupons
 } = require("../controllers/sCoupon");
 
 // Initializing router
@@ -16,5 +17,6 @@ const router = new express.Router();
 router.post("/generate", generateCoupon);
 router.post("/verify", verifyCoupon);
 router.post("/redeem", redeemCoupon);
+router.get("/getAllStatic", getAllStaticCoupons);
 // Exporting Modules
 module.exports = router;

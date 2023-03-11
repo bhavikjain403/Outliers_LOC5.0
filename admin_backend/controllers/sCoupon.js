@@ -133,6 +133,35 @@ const verifyCoupon = async (req, res) => {
   }
 }
 
+
+const getAllStaticCoupons = async (req, res) => {
+  try {
+    var company = req.body.company_name
+    var coupons = await SCoupon.find({ company_name: company, expired: false });
+    console.log(coupons)
+    if (coupons.length>0) {
+      res.status(200).json({
+        message: "You have the following coupons !",
+        status: true,
+        data: coupons,
+      });
+      return;
+    } else {
+      res.status(200).json({
+        message: "No coupons available !",
+        status: false,
+        data: {},
+      });
+    }
+  }
+  catch (err) {
+    res.status(400).json({
+      message: err.message,
+      status: false
+    });
+  }
+}
+
 const redeemCoupon = async (req, res) => {
   try {
 
@@ -222,5 +251,6 @@ module.exports = {
   generateCoupon,
   sendCouponMail,
   verifyCoupon,
-  redeemCoupon
+  redeemCoupon,
+  getAllStaticCoupons
 };
