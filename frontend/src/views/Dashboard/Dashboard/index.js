@@ -66,7 +66,7 @@ export default function Dashboard() {
         gap='24px'>
         <BuiltByDevelopers
           title={"Built by Developers"}
-          name={"Purity UI Dashboard"}
+          name={"Incento"}
           description={
             "From colors, cards, typography to complex elements, you will find the full documentation."
           }
