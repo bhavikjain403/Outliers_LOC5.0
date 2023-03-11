@@ -51,8 +51,8 @@ const staticCouponSchema = new mongoose.Schema(
       type: String,
       unique: true,
       trim: true,
-      minlength: [12, "Invalid Coupon!"],
-      maxlength: [12, "Invalid Coupon!"],
+      // minlength: [12, "Invalid Coupon!"],
+      // maxlength: [12, "Invalid Coupon!"],
     },
 
     verify_count: {
