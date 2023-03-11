@@ -195,7 +195,7 @@ function Billing() {
         <Box>
           <Title>Active Dates</Title>
           <Flex>
-            <Stack direction="column">
+            <Stack direction="column" marginX={4}>
               <Text>Start Date</Text>
               <Input type="date"></Input>
             </Stack>
@@ -205,10 +205,16 @@ function Billing() {
             </Stack>
           </Flex>
           <Checkbox paddingY={3}>Set End Date</Checkbox>
-          <Stack direction="column">
-            <Text>End Date</Text>
-            <Input type="date" width={"35%"}></Input>
-          </Stack>
+          <Flex>
+            <Stack direction="column" marginX={4}>
+              <Text>End Date</Text>
+              <Input type="date"></Input>
+            </Stack>
+            <Stack direction="column">
+              <Text>End Time (EST)</Text>
+              <Input type="time"></Input>
+            </Stack>
+          </Flex>
         </Box>
       </Card>
     </Flex>
