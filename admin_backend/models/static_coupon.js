@@ -25,7 +25,11 @@ const staticCouponSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["cashback", "free", "percent", "amount"]
+      enum: ["percent", "amount"]
+    },
+
+    discount: {
+      type: Number
     },
 
     product_categories: {
