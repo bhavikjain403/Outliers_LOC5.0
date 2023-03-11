@@ -5,17 +5,17 @@ const mongoose = require("mongoose");
 const staticCouponSchema = new mongoose.Schema(
   {
 
-    company_name:{
-        type: String,
-        required: true,
-        trim: true,
+    company_name: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
     creator_email: {
       type: String,
       required: true,
       trim: true,
-     // unique: true,
+      // unique: true,
       lowercase: true,
       match: [
         /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/,
@@ -23,61 +23,60 @@ const staticCouponSchema = new mongoose.Schema(
       ],
     },
 
-
     type: {
       type: String,
       trim: true,
     },
 
-    product_categories : {
+    product_categories: {
       type: mongoose.Schema.Types.Array,
-      required:true
+      required: true
+    },
+
+    users: {
+      type: {},
+      required: true
     },
 
     expired: {
       type: Boolean,
-      requied:true
+      required: true
     },
 
     code: {
       type: String,
-      unique:true,
+      unique: true,
       trim: true,
       minlength: [12, "Invalid Coupon!"],
       maxlength: [12, "Invalid Coupon!"],
     },
 
-    redeem_count : {
+    redeem_count: {
       type: Number,
-      required:true
+      required: true
     },
 
-    max_count:{
-      type:Number,
-      required:true
+    verify_count: {
+      type: Number,
+      required: true
     },
 
-    created_at: {
-      type: Date,
-      trim: true,
+    max_count: {
+      type: Number,
+      required: true
     },
 
     expires_at: {
       type: Date,
-      trim: true,
+      required: true,
     },
 
-    creator:
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      }
   },
   { timestamps: true }
 );
 
 
-const SCoupon = mongoose.model("SCoupon", staticCouponSchema);
+const SCoupon = mongoose.model("SCoupon", staticCouponSchema, "scoupons");
 
 // Exporting the module
 module.exports = SCoupon;

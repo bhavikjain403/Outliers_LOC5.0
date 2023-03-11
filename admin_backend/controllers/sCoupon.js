@@ -1,7 +1,7 @@
 // Importing modules
 const SCoupon = require("../models/static_coupon");
 const bcryptjs = require("bcryptjs");
-const {removeSensitiveData} = require("../utils/functions");
+const { removeSensitiveData } = require("../utils/functions");
 const jwt = require("jsonwebtoken");
 const voucher_codes = require('voucher-code-generator')
 const dotenv = require("dotenv").config();
@@ -19,24 +19,24 @@ const generateCoupon = async (req, res) => {
 
   try {
     var company = req.body.company_name
-    company = company.substring(0,3)
+    company = company.substring(0, 3)
 
 
     const code = voucher_codes.generate({
-        pattern: `ICO-${company}-####`,
+      pattern: `ICO-${company}-####`,
     });
 
     let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
     if (coupon) {
       res.status(400).json({
         message: "Coupon Already Exists!",
-        status:false,
+        status: false,
         data: {
           coupon: coupon,
         },
       });
       return;
-    }else{
+    } else {
       var temp = req.body
       temp['code'] = code[0]
 
@@ -44,7 +44,7 @@ const generateCoupon = async (req, res) => {
       await newCoupon.save();
       res.status(200).json({
         message: "Coupon Created Successfully !",
-        status:true,
+        status: true,
         data: {
           coupon: newCoupon,
         },
@@ -53,7 +53,7 @@ const generateCoupon = async (req, res) => {
 
 
   }
-  catch(err) {
+  catch (err) {
     res.status(400).json({
       message: err.message,
       status: false
@@ -63,30 +63,116 @@ const generateCoupon = async (req, res) => {
 
 const verifyCoupon = async (req, res) => {
   try {
+
     let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
 
-    if(!coupon){
+    if (!coupon) {
       res.status(400).json({
         message: "Coupon not found ",
         status: false,
-        data : {}
+        data: {}
       });
-    }else{
-      if(coupon.redeem_count < coupon.max_count && Date.now() < coupon.expires_at && !coupon.expired){
-        res.status(200).json({
-          message: "Verifiied ! ",
-          status: true
+    } else {
+      if (coupon.redeem_count < coupon.max_count && Date.now() < coupon.expires_at && !coupon.expired) {
+        if (coupon.product_categories.includes(req.body.category)) {
+          // User can use coupon only 5 times
+          if (req.body.uid in coupon.users) {
+            if (coupon.users[req.body.uid] > 5) {
+              res.status(400).json({
+                message: "Already redeemed 5 times",
+                status: false,
+                data: {}
+              });
+            } else {
+              coupon.verify_count += 1
+              coupon.save();
+              res.status(200).json({
+                message: "Verifiied ! ",
+                status: true
+              });
+            }
+          } else {
+            coupon.verify_count += 1
+            coupon.users[req.body.uid] = 0
+            coupon.markModified('users')
+            coupon.save();
+
+            res.status(200).json({
+              message: "Verifiied ! ",
+              status: true
+            });
+          }
+
+
+        } else {
+          res.status(400).json({
+            message: "Wrong Product Category !! ",
+            status: false,
+            data: {}
+          });
+        }
+
+
+      } else {
+        res.status(400).json({
+          message: "Coupon Expired or Used already !! ",
+          status: false,
+          data: {}
         });
       }
     }
 
 
   }
-  catch(err) {
+  catch (err) {
     res.status(400).json({
       message: err.message,
       status: false,
-      data : {}
+      data: {}
+    });
+  }
+}
+
+const redeemCoupon = async (req, res) => {
+  try {
+
+    let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
+
+    if (!coupon) {
+      res.status(400).json({
+        message: "Coupon not found ",
+        status: false,
+        data: {}
+      });
+    } else {
+      if (req.body.uid in coupon.users) {
+
+        coupon.redeem_count += 1
+        coupon.markModified('users')
+        coupon.users[req.body.uid] += 1
+        coupon.save()
+
+        res.status(200).json({
+          message: "Redeemed Successfully !!",
+          status: true,
+          data: {}
+        });
+      } else {
+        res.status(400).json({
+          message: "Coupon not verified !! ",
+          status: false,
+          data: {}
+        });
+      }
+    }
+
+
+  }
+  catch (err) {
+    res.status(400).json({
+      message: err.message,
+      status: false,
+      data: {}
     });
   }
 }
@@ -100,7 +186,7 @@ const sendCouponMail = async (req, res) => {
 
     let img = await QRCode.toDataURL(code);
 
-    for(i = 0; i<listcoupons.length;i++){
+    for (i = 0; i < listcoupons.length; i++) {
       const emailSuccess = await sendEmail({
         subject: `Your Coupon Code is : `,
         emailId: listcoupons[i],
@@ -108,7 +194,7 @@ const sendCouponMail = async (req, res) => {
         fileOptions: {
           name: "",
           image_url: img,
-          email:listcoupons[i]
+          email: listcoupons[i]
         },
       });
       console.log(emailSuccess);
@@ -117,12 +203,12 @@ const sendCouponMail = async (req, res) => {
 
 
     res.status(200).json({
-        message: "Coupon mailed successfully",
-        status: true,
-        data:{}
-      });
+      message: "Coupon mailed successfully",
+      status: true,
+      data: {}
+    });
   }
-  catch(err) {
+  catch (err) {
     res.status(400).json({
       message: err.message,
       status: false
@@ -133,7 +219,8 @@ const sendCouponMail = async (req, res) => {
 
 // Exporting modules
 module.exports = {
-generateCoupon,
-sendCouponMail,
-verifyCoupon
+  generateCoupon,
+  sendCouponMail,
+  verifyCoupon,
+  redeemCoupon
 };
