@@ -4,15 +4,21 @@ import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
 import {
   Flex,
   Table,
+  HStack,
   Tbody,
+  Button,
   Text,
   Th,
   Thead,
   Tr,
   useColorModeValue,
+  Input,
+  Stack,
+  InputGroup,
+  InputLeftElement,
 } from "@chakra-ui/react";
 import { BsFillChatLeftDotsFill } from "react-icons/bs";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Card from "components/Card/Card";
 import CardBody from "components/Card/CardBody";
 import CardHeader from "components/Card/CardHeader";
@@ -21,6 +27,7 @@ import { useEffect } from "react";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 import { createTheme, colors, ThemeProvider } from "@mui/material";
+import { AttachmentIcon, CheckIcon } from "@chakra-ui/icons";
 
 function Tables() {
   const columns = [
@@ -79,6 +86,37 @@ function Tables() {
   const [coupons, setCoupons] = useState([]);
   const [dCoupons, setDCoupons] = useState([]);
 
+  const [file, setFile] = useState();
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      console.log(e.target.files[0]);
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = () => {
+    console.log("Hello");
+    if (!file) {
+      return;
+    }
+    console.log("Hello");
+
+    // 👇 Uploading the file using the fetch API to the server
+    fetch("https://httpbin.org/post", {
+      method: "POST",
+      body: file,
+      // 👇 Set headers manually for single file upload
+      headers: {
+        "content-type": file.type,
+        "content-length": `${file.size}`, // 👈 Headers need to be a string
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  };
+
   useEffect(() => {
     console.log(user);
     CouponApi.getAllStaticCoupons(user?.data?.user?.company || user?.company)
@@ -108,6 +146,7 @@ function Tables() {
           active: !item.expired,
         }));
         setDCoupons(couponseFormatted);
+
       })
       .catch((error) => {
         console.log(error);
@@ -116,6 +155,34 @@ function Tables() {
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
+      <Card mb={"1em"}>
+        <Stack direction="column">
+          <Text fontWeight="bold" fontSize="xl">
+            Input User Data File or use previously uploaded File:{" "}
+          </Text>
+
+          <InputGroup>
+            <InputLeftElement children={<AttachmentIcon />} />
+            <Input
+              type="file"
+              border={0}
+              width={"35%"}
+              onChange={handleFileChange}
+            ></Input>
+            <Button colorScheme="linkedin" onClick={handleUpload}>
+              Upload{" "}
+              <span>
+                {"  "} {<CheckIcon />}
+              </span>
+            </Button>
+          </InputGroup>
+
+          <HStack>
+            <Button colorScheme="teal">Send Coupons on Mail</Button>
+            <Button colorScheme="teal">Send Coupons on SMS</Button>
+          </HStack>
+        </Stack>
+      </Card>
       <Card>
         <Text fontSize={30} fontWeight={700} mb={5}>
           Static Coupons

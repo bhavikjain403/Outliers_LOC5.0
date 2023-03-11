@@ -48,7 +48,7 @@ export function SidebarHelp(props) {
           }}
           color="black"
         >
-          DOCUMENTATION
+          API DOCS
         </Button>
       </Link>
     </Flex>

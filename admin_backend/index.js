@@ -2,6 +2,9 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./connection");
+const formidable = require('express-formidable');
+
+
 
 // Initializing an express app
 const app = express();
@@ -13,6 +16,7 @@ const PORT = process.env.PORT || 5001;
 app.use(cors({origin: true}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(formidable());
 
 
 
