@@ -9,7 +9,8 @@ generateDCoupon,
 sendCouponMail,
 verifyDCoupon,
 redeemDCoupon,
-getAllDynamicCoupons
+getAllDynamicCoupons,
+getCsv
 } = require("../controllers/dCoupon");
 
 // Initializing router
@@ -20,5 +21,6 @@ router.post("/verify", verifyDCoupon);
 router.post("/redeem", redeemDCoupon);
 router.get("/getAllDynamic", getAllDynamicCoupons);
 router.post("/sendmail", sendCouponMail);
+router.post("/csv", upload.single('userdata') ,getCsv);
 // Exporting Modules
 module.exports = router;
