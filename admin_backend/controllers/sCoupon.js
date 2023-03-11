@@ -14,18 +14,10 @@ var QRCode = require('qrcode')
 
 
 const generateCoupon = async (req, res) => {
-
-
-
   try {
     var company = req.body.company_name
     company = company.substring(0, 3)
-
-
-    const code = voucher_codes.generate({
-      pattern: `ICO-${company}-####`,
-    });
-
+    var code = req.body.coupon
     let coupon = await SCoupon.findOne({ code: req.body.coupon_code });
     if (coupon) {
       res.status(400).json({
@@ -136,7 +128,7 @@ const verifyCoupon = async (req, res) => {
 
 const getAllStaticCoupons = async (req, res) => {
   try {
-    var company = req.body.company_name
+    var company = req.query.company_name
     var coupons = await SCoupon.find({ company_name: company, expired: false });
     console.log(coupons)
     if (coupons.length>0) {

@@ -25,7 +25,7 @@ const staticCouponSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      trim: true,
+      enum: ["cashback", "free", "percent", "amount"]
     },
 
     product_categories: {
@@ -49,11 +49,6 @@ const staticCouponSchema = new mongoose.Schema(
       trim: true,
       minlength: [12, "Invalid Coupon!"],
       maxlength: [12, "Invalid Coupon!"],
-    },
-
-    redeem_count: {
-      type: Number,
-      required: true
     },
 
     verify_count: {
