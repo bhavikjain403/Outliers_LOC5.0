@@ -49,11 +49,6 @@ const dynamicCouponSchema = new mongoose.Schema(
       trim: true,
     },
 
-    max_count : {
-      type: Number,
-      trim: true,
-    },
-
     created_at: {
       type: Date,
       trim: true,
