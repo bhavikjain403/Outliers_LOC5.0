@@ -24,6 +24,7 @@ import { AuthProvider } from "./auth-context/auth.context";
 import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
+import LoginPage from "components/Home/LoginPage";
 
 let user = localStorage.getItem("user");
 user = JSON.parse(user);
@@ -35,7 +36,8 @@ ReactDOM.render(
         <Route path={`/auth`} component={AuthLayout} />
         <Route path={`/admin`} component={AdminLayout} />
         <Route path={`/rtl`} component={RTLLayout} />
-        <Redirect from={`/`} to="/auth/signin" />
+        <Route path={`/home`} component={LoginPage} />
+        <Redirect from={`/`} to="/home" />
       </Switch>
     </HashRouter>
   </AuthProvider>,
