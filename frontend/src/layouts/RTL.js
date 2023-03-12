@@ -87,7 +87,7 @@ export default function Dashboard(props) {
 	// Chakra Color Mode
 	return (
 		<ChakraProvider theme={theme} resetCss={false}>
-			<RtlProvider>
+			{/* <RtlProvider> */}
 				<Sidebar
 					routes={routes}
 					logoText={'Incento'}
@@ -137,7 +137,7 @@ export default function Dashboard(props) {
 						onTransparent={() => setSidebarVariant('transparent')}
 					/>
 				</MainPanel>
-			</RtlProvider>
+			{/* </RtlProvider> */}
 		</ChakraProvider>
 	);
 }
