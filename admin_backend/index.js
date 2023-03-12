@@ -2,8 +2,6 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./connection");
-const formidable = require('express-formidable');
-
 
 
 // Initializing an express app
