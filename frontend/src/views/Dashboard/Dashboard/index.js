@@ -13,9 +13,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 // assets
-import peopleImage from "assets/img/people-image.png";
-import logoChakra from "assets/svg/logo-white.svg";
-import BarChart from "components/Charts/BarChart";
 import LineChart from "components/Charts/LineChart";
 import Card from "components/Card/Card";
 // Custom icons
@@ -27,8 +24,6 @@ import {
 } from "components/Icons/Icons.js";
 import React, { useState, useEffect } from "react";
 import { dashboardTableData, timelineData } from "variables/general";
-import ActiveUsers from "./components/ActiveUsers";
-import BuiltByDevelopers from "./components/BuiltByDevelopers";
 import MiniStatistics from "./components/MiniStatistics";
 import OrdersOverview from "./components/OrdersOverview";
 import Projects from "./components/Projects";
@@ -83,6 +78,46 @@ export default function Dashboard() {
     ],
   };
 
+  const addSymbols = (e) => {
+    var suffixes = ["", "K", "M", "B"];
+    var order = Math.max(
+      Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)),
+      0
+    );
+    if (order > suffixes.length - 1) order = suffixes.length - 1;
+    var suffix = suffixes[order];
+    return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+  };
+
+  const optionsBar = {
+    animationEnabled: true,
+    theme: "light2",
+    title: {
+      text: "Most Popular Categories of Products",
+    },
+    axisX: {
+      title: "Categories",
+      reversed: true,
+    },
+    axisY: {
+      title: "Purchases Made in that category",
+      includeZero: true,
+      labelFormatter: addSymbols,
+    },
+    data: [
+      {
+        type: "bar",
+        dataPoints: [
+          { y: 1212, label: "Shoes" },
+          { y: 932, label: "Hats" },
+          { y: 805, label: "Women" },
+          { y: 563, label: "Men" },
+          { y: 376, label: "Kids" },
+        ],
+      },
+    ],
+  };
+
   useEffect(() => {
     CouponApi.getAllStaticCoupons(user?.data?.user?.company)
       .then((response) => {
@@ -98,6 +133,19 @@ export default function Dashboard() {
         console.log(error);
       });
   }, []);
+
+  const handleClick = (e) => {
+    // e.preventdefault();
+
+    fetch("http://127.0.0.1:5000/", {
+      method: "POST",
+      body: prediction,
+      // 👇 Set headers manually for single file upload
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  };
 
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
@@ -127,14 +175,24 @@ export default function Dashboard() {
           icon={<CartIcon h={"24px"} w={"24px"} color={iconBoxInside} />}
         />
       </SimpleGrid>
-      {/* PIE CHART */}
+
+      {/* Popular Categories Chart */}
       <Grid height={"450px"} paddingY={5}>
+        <Card height={"420px"} paddingY={5}>
+          <Flex>
+            <CanvasJSChart options={optionsBar} />
+          </Flex>
+        </Card>
+      </Grid>
+
+      {/* PIE CHART */}
+      {/* <Grid height={"450px"} paddingY={5}>
         <Card height={"420px"} paddingY={5}>
           <Flex>
             <CanvasJSChart options={options} />
           </Flex>
         </Card>
-      </Grid>    
+      </Grid> */}
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
@@ -186,7 +244,9 @@ export default function Dashboard() {
                 </Text>
               </Stack>
             </InputGroup>
-            <Button type="submit">Predict Customer Retention</Button>
+            <Button type="submit" onClick={handleClick}>
+              Predict Customer Retention
+            </Button>
           </Card>
         </Grid>
         <SalesOverview
@@ -195,7 +255,7 @@ export default function Dashboard() {
           chart={<LineChart />}
         />
       </Grid>
-      <Grid
+      {/* <Grid
         templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
         templateRows={{ sm: "1fr auto", md: "1fr", lg: "1fr" }}
         gap="24px"
@@ -211,7 +271,7 @@ export default function Dashboard() {
           amount={30}
           data={timelineData}
         />
-      </Grid>
+      </Grid> */}
     </Flex>
   );
 }

@@ -103,7 +103,7 @@ function Tables() {
     console.log("Hello");
 
     // 👇 Uploading the file using the fetch API to the server
-    fetch("https://httpbin.org/post", {
+    fetch("http://127.0.0.1:5000/sender", {
       method: "POST",
       body: file,
       // 👇 Set headers manually for single file upload
@@ -146,7 +146,6 @@ function Tables() {
           active: !item.expired,
         }));
         setDCoupons(couponseFormatted);
-
       })
       .catch((error) => {
         console.log(error);
