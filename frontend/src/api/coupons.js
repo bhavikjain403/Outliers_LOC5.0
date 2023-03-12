@@ -19,6 +19,12 @@ class CouponApi {
     data
     );
   };
+
+  static predictCoupon = (data) => {
+    return axios.post("https://596e-2402-3a80-4170-3ce7-db1-6499-fc78-8c23.in.ngrok.io",
+    data
+    );
+  };
 }
 
 let base = "";
