@@ -101,32 +101,32 @@ const getAllDynamicCoupons = async (req, res) => {
     var user = req.query.uid
     var ans = []
     if (coupons.length>0) {
-      for( var i=0;i<coupons.length;i++) {
-        var temp=coupons[i].user_list
-        if(temp.length){
-          for(var i=0;i<temp.length;i++){
-            if(temp[i]==user){
-              ans.push(coupons[i])
-              break
-            }
-          }
-        }
-      }
-      console.log(ans)
-      if (ans.length>0) {
+      // for( var i=0;i<coupons.length;i++) {
+      //   var temp=coupons[i].user_list
+      //   if(temp.length){
+      //     for(var i=0;i<temp.length;i++){
+      //       if(temp[i]==user){
+      //         ans.push(coupons[i])
+      //         break
+      //       }
+      //     }
+      //   }
+      // }
+      console.log(coupons)
+      // if (coupons.length>0) {
         res.status(200).json({
           message: "You have the following coupons !",
           status: true,
-          data: ans,
+          data: coupons,
         });
-      }
-      else {
-        res.status(400).json({
-          message: "No coupons available !",
-          status: false,
-          data: {},
-        });
-      }
+      // }
+      // else {
+      //   res.status(400).json({
+      //     message: "No coupons available !",
+      //     status: false,
+      //     data: {},
+      //   });
+      // }
       return;
     } else {
       res.status(400).json({
