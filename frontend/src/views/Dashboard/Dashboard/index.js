@@ -33,14 +33,6 @@ import MiniStatistics from "./components/MiniStatistics";
 import OrdersOverview from "./components/OrdersOverview";
 import Projects from "./components/Projects";
 import SalesOverview from "./components/SalesOverview";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 

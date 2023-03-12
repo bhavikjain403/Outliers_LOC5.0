@@ -104,11 +104,12 @@ function Billing() {
   function generateCoupon() {
     console.log(user);
     const data = {
-      company_name: user?.company,
+      company_name: user?.data?.user?.company || user?.company,
+      creator_email:user?.data?.user?.email || user?.email,
       code: couponRef.current.value,
       max_count: parseInt(redeemsNum.current.value),
-      creator_email: user?.email,
       product_categories: collectionList,
+      createdAt: new Date(),
       expires_at: new Date(Date.parse(endDateRef.current.value)),
       expired: false,
       verify_count: 0,
