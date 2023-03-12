@@ -85,6 +85,7 @@ function Billing() {
   const endDateRef = useRef();
   const couponRef = useRef();
   const redeemsNum = useRef();
+  const sendEmailRef = useRef();
 
   const { user } = useAuth();
 
@@ -105,7 +106,7 @@ function Billing() {
     console.log(user);
     const data = {
       company_name: user?.data?.user?.company || user?.company,
-      creator_email:user?.data?.user?.email || user?.email,
+      creator_email: user?.data?.user?.email || user?.email,
       code: couponRef.current.value,
       max_count: parseInt(redeemsNum.current.value),
       product_categories: collectionList,
@@ -138,13 +139,14 @@ function Billing() {
   }
 
   function generateDCoupon() {
-    console.log(user);
     const data = {
       company_name: user?.data?.user?.company,
       creator_email: user?.data?.user?.email,
       expires_at: new Date(Date.parse(endDateRef.current.value)),
       expired: false,
-      rules: JSON.stringify({conditions, effects}),
+      user_list: collectionList,
+      send_email:sendEmailRef.current.checked,
+      rules: JSON.stringify({ conditions, effects }),
       users: {},
     };
     CouponApi.generateDynamicCoupon(data)
@@ -292,7 +294,7 @@ function Billing() {
                     ]);
                   }}
                 >
-                  Browse
+                  Add
                 </Button>
               </HStack>
               <Box>
@@ -322,7 +324,7 @@ function Billing() {
               <Title>Active Dates</Title>
               <Flex>
                 <Stack direction="column" marginX={4}>
-                  <Text fontWeight={600} >End Date</Text>
+                  <Text fontWeight={600}>End Date</Text>
                   <Input type="datetime-local" ref={endDateRef}></Input>
                 </Stack>
               </Flex>
@@ -374,14 +376,46 @@ function Billing() {
               </Box>
             </Box>
           </Card>
+          <Card mb={5}>
+            <Box>
+              <Title>Applies to</Title>
+              <Text fontWeight={500}>User IDs</Text>
+              <HStack marginY={4}>
+                <InputGroup>
+                  <InputLeftElement
+                    children={<SearchIcon />}
+                  ></InputLeftElement>
+                  <Input placeholder="Search Collections" ref={collectionRef} />
+                </InputGroup>
+                <Button
+                  rounded={"md"}
+                  onClick={() => {
+                    setCollectionList((prev) => [
+                      ...prev,
+                      collectionRef.current.value,
+                    ]);
+                  }}
+                >
+                  Add
+                </Button>
+              </HStack>
+            </Box>
+          </Card>
           <Card mb={"1em"}>
             <Box>
               <Title>Active Dates</Title>
               <Flex>
                 <Stack direction="column" marginX={4}>
-                  <Text fontWeight={600} >End Date</Text>
+                  <Text fontWeight={600}>End Date</Text>
                   <Input type="datetime-local" ref={endDateRef}></Input>
                 </Stack>
+              </Flex>
+            </Box>
+            <Divider mt={5} />
+            <Box mt={5}>
+              <Flex direction={"column"} >
+              <Title>Notify Users</Title>
+              <Checkbox px={5} ref={sendEmailRef}>Notify Users via Email</Checkbox>
               </Flex>
             </Box>
           </Card>
@@ -512,17 +546,19 @@ function NewMenu({ preItem, items, menuItem, type, set, arrIdx }) {
     if (inputTypes[preItem] == "number") {
       return (
         <NumberInput style={{ flex: 1 }}>
-          <NumberInputField onChange={(e) => {
-            e.persist()
-                        set((items) => [
-                          ...items.slice(0, arrIdx),
-                          {
-                            ...items[arrIdx],
-                            [type]: e?.target?.value,
-                          },
-                          ...items.slice(arrIdx + 1),
-                        ]);
-                      }} />
+          <NumberInputField
+            onChange={(e) => {
+              e.persist();
+              set((items) => [
+                ...items.slice(0, arrIdx),
+                {
+                  ...items[arrIdx],
+                  [type]: e?.target?.value,
+                },
+                ...items.slice(arrIdx + 1),
+              ]);
+            }}
+          />
           <NumberInputStepper>
             <NumberIncrementStepper />
             <NumberDecrementStepper />
@@ -530,33 +566,39 @@ function NewMenu({ preItem, items, menuItem, type, set, arrIdx }) {
         </NumberInput>
       );
     } else {
-      return <Input onChange={(e) => {
-        e.persist()
-                    set((items) => [
-                      ...items.slice(0, arrIdx),
-                      {
-                        ...items[arrIdx],
-                        [type]: e?.target?.value,
-                      },
-                      ...items.slice(arrIdx + 1),
-                    ]);
-                  }}></Input>;
+      return (
+        <Input
+          onChange={(e) => {
+            e.persist();
+            set((items) => [
+              ...items.slice(0, arrIdx),
+              {
+                ...items[arrIdx],
+                [type]: e?.target?.value,
+              },
+              ...items.slice(arrIdx + 1),
+            ]);
+          }}
+        ></Input>
+      );
     }
   } else {
     if (couponInputs[preItem]) {
       return (
         <NumberInput style={{ flex: 1 }}>
-          <NumberInputField onChange={(e) => {
-            e.persist()
-                        set((items) => [
-                          ...items.slice(0, arrIdx),
-                          {
-                            ...items[arrIdx],
-                            [type]: e?.target?.value,
-                          },
-                          ...items.slice(arrIdx + 1),
-                        ]);
-                      }} />
+          <NumberInputField
+            onChange={(e) => {
+              e.persist();
+              set((items) => [
+                ...items.slice(0, arrIdx),
+                {
+                  ...items[arrIdx],
+                  [type]: e?.target?.value,
+                },
+                ...items.slice(arrIdx + 1),
+              ]);
+            }}
+          />
           <InputRightElement
             children={couponInputs[preItem] == "percent" ? "%" : "₹"}
           ></InputRightElement>
