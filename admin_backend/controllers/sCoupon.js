@@ -55,7 +55,7 @@ const generateCoupon = async (req, res) => {
 const verifyCoupon = async (req, res) => {
   try {
 
-    let coupon = await SCoupon.findOne({ code: req.body.coupon_code, company_name:req.body.company_name });
+    let coupon = await SCoupon.findOne({ code: req.body.coupon_code, company_name: req.body.company_name });
     if (!coupon) {
       res.status(400).json({
         message: "Coupon not found ",
@@ -63,10 +63,10 @@ const verifyCoupon = async (req, res) => {
         data: {}
       });
     } else {
-      if(coupon.users==null){
+      if (coupon.users == null) {
         coupon.verify_count += 1
-        coupon.users={}
-        coupon.users[req.body.uid]=0
+        coupon.users = {}
+        coupon.users[req.body.uid] = 0
         coupon.markModified('users')
         coupon.save();
 
@@ -89,8 +89,12 @@ const verifyCoupon = async (req, res) => {
               coupon.verify_count += 1
               coupon.save();
               res.status(200).json({
-                message: "Verifiied ! ",
-                status: true
+                message: "Verified ! ",
+                status: true,
+                data: {
+                  "discount": coupon.discount,
+                  "type": coupon.type
+                }
               });
             }
           } else {
@@ -100,8 +104,12 @@ const verifyCoupon = async (req, res) => {
             coupon.save();
 
             res.status(200).json({
-              message: "Verifiied ! ",
-              status: true
+              message: "Verified ! ",
+              status: true,
+              data: {
+                "discount": coupon.discount,
+                "type": coupon.type
+              }
             });
           }
 
@@ -141,7 +149,7 @@ const getAllStaticCoupons = async (req, res) => {
     var company = req.query.company_name
     var coupons = await SCoupon.find({ company_name: company, expired: false });
     console.log(coupons)
-    if (coupons.length>0) {
+    if (coupons.length > 0) {
       res.status(200).json({
         message: "You have the following coupons !",
         status: true,
