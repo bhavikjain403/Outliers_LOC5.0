@@ -34,6 +34,22 @@ const generateDCoupon = async (req, res) => {
     } else {
       var temp = req.body
       temp['code'] = code[0]
+
+      // if(req.body.rules!=null || req.body.rules!=undefined){
+
+      //   for(var i=0; i<temp['rules']['conditions'].length;i++){
+      //     switch(temp['rules']['conditions']['pre']){
+      //       case 'cart-value' :
+      //         temp['']
+      //     }
+      //   }
+
+      //   if(req.body.rules['effects']!=[]){
+      //     temp['type'] = req.body.rules['effects'][0]['effect']
+      //     temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
+      //   }
+      // }
+
       let newCoupon = new DCoupon(temp);
       await newCoupon.save();
 

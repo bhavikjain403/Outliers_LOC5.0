@@ -36,6 +36,11 @@ const dynamicCouponSchema = new mongoose.Schema(
       required : false
     },
 
+    max_cart_amt : {
+      type: Number,
+      required : false
+    },
+
     discount: {
       type: Number,
       required:false
