@@ -27,11 +27,16 @@ const dynamicCouponSchema = new mongoose.Schema(
     },
 
     rules : {
-      type: String,
+      type: mongoose.Schema.Types.Map,
       required:true
     },
 
     min_cart_amt : {
+      type: Number,
+      required : false
+    },
+
+    max_cart_amt : {
       type: Number,
       required : false
     },
