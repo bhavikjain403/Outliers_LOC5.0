@@ -36,6 +36,22 @@ const generateDCoupon = async (req, res) => {
       temp['code'] = code[0]
       let newCoupon = new DCoupon(temp);
       await newCoupon.save();
+
+      let img = await QRCode.toDataURL(newCoupon.code);
+
+      if(temp['send_email']){
+        const emailSuccess = await sendEmail({
+        subject: `Your Coupon Code is : `,
+        emailId: temp['user_list'],
+        filename: "coupon",
+        fileOptions: {
+          name: "",
+          image_url: img,
+          email: ""
+        },
+      });
+      }
+
       res.status(200).json({
         message: "Coupon Created Successfully !",
         status: true,
@@ -195,43 +211,43 @@ const redeemDCoupon = async (req, res) => {
 }
 
 
-const sendCouponMail = async (req, res) => {
-  try {
+// const sendCouponMail = async (req, res) => {
+//   try {
 
-    let code = req.body['code']
-    let listcoupons = req.body['coupons'];
+//     let code = req.body['code']
+//     let listcoupons = req.body['coupons'];
 
-    let img = await QRCode.toDataURL(code);
+//     let img = await QRCode.toDataURL(code);
 
-    for (i = 0; i < listcoupons.length; i++) {
-      const emailSuccess = await sendEmail({
-        subject: `Your Coupon Code is : `,
-        emailId: listcoupons[i],
-        filename: "coupon",
-        fileOptions: {
-          name: "",
-          image_url: img,
-          email: listcoupons[i]
-        },
-      });
-      console.log(emailSuccess);
-    }
+//     for (i = 0; i < listcoupons.length; i++) {
+//       const emailSuccess = await sendEmail({
+//         subject: `Your Coupon Code is : `,
+//         emailId: listcoupons[i],
+//         filename: "coupon",
+//         fileOptions: {
+//           name: "",
+//           image_url: img,
+//           email: listcoupons[i]
+//         },
+//       });
+//       console.log(emailSuccess);
+//     }
 
 
 
-    res.status(200).json({
-      message: "Coupon mailed successfully",
-      status: true,
-      data: {}
-    });
-  }
-  catch (err) {
-    res.status(400).json({
-      message: err.message,
-      status: false
-    });
-  }
-}
+//     res.status(200).json({
+//       message: "Coupon mailed successfully",
+//       status: true,
+//       data: {}
+//     });
+//   }
+//   catch (err) {
+//     res.status(400).json({
+//       message: err.message,
+//       status: false
+//     });
+//   }
+// }
 
 
 const getCsv = async (req, res) => {
@@ -260,7 +276,6 @@ const getCsv = async (req, res) => {
 // Exporting modules
 module.exports = {
   generateDCoupon,
-  sendCouponMail,
   verifyDCoupon,
   redeemDCoupon,
   getAllDynamicCoupons,
