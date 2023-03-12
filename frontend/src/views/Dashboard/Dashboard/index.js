@@ -31,7 +31,7 @@ import SalesOverview from "./components/SalesOverview";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 
-import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Legend, Cell, Tooltip } from "recharts";
 
 import CanvasJSReact from "./canvasjs.react";
 //var CanvasJSReact = require('./canvasjs.react');
@@ -44,6 +44,18 @@ const defaultFormFields = {
   discount_applied: "",
   recency: "",
 };
+
+const COLORS = [
+  "#AA77FF",
+  "#C9EEFF",
+  "#3F497F",
+  "#FDD36A",
+  "#9DC08B",
+  "#9E4784",
+  "#D27685",
+  "#DF7857",
+  "#0E8388",
+];
 
 export default function Dashboard() {
   const iconBoxInside = useColorModeValue("white", "white");
@@ -123,10 +135,11 @@ export default function Dashboard() {
   useEffect(() => {
     CouponApi.getAllStaticCoupons(user?.data?.user?.company)
       .then((response) => {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         const couponsFormatted = response.data.data.map((item, index) => ({
           y: item.max_count,
           label: item.code,
+          fill: COLORS[COLORS.length % (index + 1)],
         }));
         setCoupons(couponsFormatted);
         // console.log(couponsFormatted);
@@ -187,7 +200,6 @@ export default function Dashboard() {
         </Card>
       </Grid>
 
-      {/* PIE CHART */}
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
@@ -247,41 +259,33 @@ export default function Dashboard() {
         <Grid height={"500px"}>
           <Card height={"100%"}>
             <Flex>
-              {/* <CanvasJSChart options={options} /> */}
-              <PieChart width={400} height={400}>
-                <Pie
-                  dataKey="y"
-                  isAnimationActive={false}
-                  data={coupon}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label="code"
-                />
-                <Tooltip />
-              </PieChart>
+              <Stack direction="column">
+                <Text align={"center"}>Number of Coupons Available</Text>
+                {/* <CanvasJSChart options={options} /> */}
+                <PieChart width={460} height={400}>
+                  <Pie
+                    dataKey="y"
+                    nameKey="label"
+                    data={coupon}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={140}
+                    label
+                  >
+                    {coupon.map((entry, index) => {
+                      // console.log(COLORS[COLORS.length % (index + 1)]);
+                      return (
+                        <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                      );
+                    })}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </Stack>
             </Flex>
           </Card>
         </Grid>
       </Grid>
-      {/* <Grid
-        templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
-        templateRows={{ sm: "1fr auto", md: "1fr", lg: "1fr" }}
-        gap="24px"
-      >
-        <Projects
-          title={"Projects"}
-          amount={30}
-          captions={["Companies", "Members", "Budget", "Completion"]}
-          data={dashboardTableData}
-        />
-        <OrdersOverview
-          title={"Orders Overview"}
-          amount={30}
-          data={timelineData}
-        />
-      </Grid> */}
     </Flex>
   );
 }

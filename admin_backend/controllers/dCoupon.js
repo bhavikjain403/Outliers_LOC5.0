@@ -35,20 +35,26 @@ const generateDCoupon = async (req, res) => {
       var temp = req.body
       temp['code'] = code[0]
 
-      // if(req.body.rules!=null || req.body.rules!=undefined){
+      if(req.body.rules!=null || req.body.rules!=undefined){
 
-      //   for(var i=0; i<temp['rules']['conditions'].length;i++){
-      //     switch(temp['rules']['conditions']['pre']){
-      //       case 'cart-value' :
-      //         temp['']
-      //     }
-      //   }
+        for(var i=0; i<temp['rules']['conditions'].length;i++){
+          switch(temp['rules']['conditions'][i]['pre']){
+            case 'cart-value' :
+              temp['min_cart_amt'] = temp['rules']['conditions'][i]['suf']
+            case 'region' :
+              temp['region'] = temp['rules']['conditions'][i]['suf']
+            case 'loyalty-points' :
+              temp['loyalty_pts'] = temp['rules']['conditions'][i]['suf']
+            default:
+              console.log(temp)
+          }
+        }
 
-      //   if(req.body.rules['effects']!=[]){
-      //     temp['type'] = req.body.rules['effects'][0]['effect']
-      //     temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
-      //   }
-      // }
+        if(req.body.rules['effects']!=[]){
+          temp['type'] = req.body.rules['effects'][0]['effect']
+          temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
+        }
+      }
 
       let newCoupon = new DCoupon(temp);
       await newCoupon.save();

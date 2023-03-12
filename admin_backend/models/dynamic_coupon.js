@@ -27,7 +27,7 @@ const dynamicCouponSchema = new mongoose.Schema(
     },
 
     rules : {
-      type: String,
+      type: mongoose.Schema.Types.Map,
       required:true
     },
 
