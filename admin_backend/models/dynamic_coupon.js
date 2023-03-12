@@ -59,6 +59,17 @@ const dynamicCouponSchema = new mongoose.Schema(
       type: Date,
       trim: true,
     },
+    creator_email: {
+      type: String,
+      required: true,
+      trim: true,
+      // unique: true,
+      lowercase: true,
+      match: [
+        /^\w+([.-]?\w+)@\w+([.-]?\w+)(.\w{2,3})+$/,
+        "Invalid email address!",
+      ],
+    },
 
     creator: [
       {
