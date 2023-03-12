@@ -447,7 +447,7 @@ function Billing() {
               <Box>
                 {collectionList.map((item, index) => {
                   return (
-                    <Button key={index} mx={1}>
+                    <Button key={index} mx={1} mb={2}>
                       {item}{" "}
                       <MdDeleteForever
                         onClick={() =>

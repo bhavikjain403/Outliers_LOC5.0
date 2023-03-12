@@ -76,12 +76,12 @@ export default function HeaderLinks(props) {
           document.documentElement.dir ? (
             ""
           ) : (
-            <>Log Out</>
+            <><Button colorScheme="teal">Log Out</Button></>
           )
         }
         leftIcon={
           document.documentElement.dir ? (
-            <>Log Out</>
+            <><Button colorScheme="teal">Log Out</Button></>
           ) : (
             ""
           )
