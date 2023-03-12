@@ -134,6 +134,19 @@ export default function Dashboard() {
       });
   }, []);
 
+  const handleClick = (e) => {
+    // e.preventdefault();
+
+    fetch("http://127.0.0.1:5000/", {
+      method: "POST",
+      body: prediction,
+      // 👇 Set headers manually for single file upload
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err));
+  };
+
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
       <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="28px">
@@ -231,7 +244,9 @@ export default function Dashboard() {
                 </Text>
               </Stack>
             </InputGroup>
-            <Button type="submit">Predict Customer Retention</Button>
+            <Button type="submit" onClick={handleClick}>
+              Predict Customer Retention
+            </Button>
           </Card>
         </Grid>
         <SalesOverview
@@ -240,7 +255,7 @@ export default function Dashboard() {
           chart={<LineChart />}
         />
       </Grid>
-      <Grid
+      {/* <Grid
         templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
         templateRows={{ sm: "1fr auto", md: "1fr", lg: "1fr" }}
         gap="24px"
@@ -256,7 +271,7 @@ export default function Dashboard() {
           amount={30}
           data={timelineData}
         />
-      </Grid>
+      </Grid> */}
     </Flex>
   );
 }
