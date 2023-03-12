@@ -25,6 +25,7 @@ import AuthLayout from "layouts/Auth.js";
 import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
 import LoginPage from "components/Home/LoginPage";
+import SignupPage from "components/Home/SignupPage";
 
 import { Toaster } from 'react-hot-toast';
 
@@ -33,14 +34,14 @@ user = JSON.parse(user);
 
 ReactDOM.render(
   <AuthProvider userData={user}>
-    <Toaster/>
     <HashRouter>
       <Switch>
         <Route path={`/auth`} component={AuthLayout} />
         <Route path={`/admin`} component={AdminLayout} />
         <Route path={`/rtl`} component={RTLLayout} />
-        <Route path={`/home`} component={LoginPage} />
-        <Redirect from={`/`} to="/home" />
+        <Route path={`/login`} component={LoginPage} />
+        <Route path={`/signup`} component={SignupPage} />
+        <Redirect from={`/`} to="/login" />
       </Switch>
     </HashRouter>
   </AuthProvider>,

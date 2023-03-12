@@ -100,7 +100,7 @@ export default function Login() {
         <Button variant="primary" type="submit" className="mt-3" onClick={handleSubmit}>
           Sign In
         </Button>
-        <Link href="/signup" variant="body2">
+        <Link href="/#/signup" variant="body2">
           {"Don't have an account? Signup"}
         </Link>
       </Form>

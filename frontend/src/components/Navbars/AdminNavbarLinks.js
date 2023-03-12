@@ -55,7 +55,7 @@ export default function HeaderLinks(props) {
     AuthApi.Logout(user)
     setUser(null);
     localStorage.removeItem("user");
-    return history.push("/home");
+    return history.push("/login");
   }
 
   return (
