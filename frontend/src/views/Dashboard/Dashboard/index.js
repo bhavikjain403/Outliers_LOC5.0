@@ -245,12 +245,25 @@ export default function Dashboard() {
           </Card>
         </Grid>
         <Grid height={"500px"}>
-        <Card height={"100%"}>
-          <Flex>
-            <CanvasJSChart options={options} />
-          </Flex>
-        </Card>
-      </Grid>
+          <Card height={"100%"}>
+            <Flex>
+              {/* <CanvasJSChart options={options} /> */}
+              <PieChart width={400} height={400}>
+                <Pie
+                  dataKey="y"
+                  isAnimationActive={false}
+                  data={coupon}
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#8884d8"
+                  label="code"
+                />
+                <Tooltip />
+              </PieChart>
+            </Flex>
+          </Card>
+        </Grid>
       </Grid>
       {/* <Grid
         templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
