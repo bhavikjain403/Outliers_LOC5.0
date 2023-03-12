@@ -16,9 +16,29 @@ const dynamicCouponSchema = new mongoose.Schema(
       required:true
     },
 
+    region : {
+      type: String,
+      required:false
+    },
+
+    loyalty_pts : {
+      type: Number,
+      required:false
+    },
+
     rules : {
       type: String,
       required:true
+    },
+
+    min_cart_amt : {
+      type: Number,
+      required : false
+    },
+
+    discount: {
+      type: Number,
+      required:false
     },
 
     type: {
@@ -70,13 +90,6 @@ const dynamicCouponSchema = new mongoose.Schema(
         "Invalid email address!",
       ],
     },
-
-    creator: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-      }
-    ],
   },
   { timestamps: true }
 );
