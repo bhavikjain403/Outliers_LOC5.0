@@ -102,6 +102,12 @@ function Billing() {
   const [conditions, setConditions] = useState([]);
   const [effects, setEffects] = useState([]);
 
+  const [uploadFile, hanndleUploadChange] = Upload();
+
+  useEffect(() => {
+    setCollectionList((prev) => [...new Set([...prev, ...uploadFile])]);
+  }, [uploadFile]);
+
   function generateCoupon() {
     console.log(user);
     const data = {
@@ -145,7 +151,7 @@ function Billing() {
       expires_at: new Date(Date.parse(endDateRef.current.value)),
       expired: false,
       user_list: collectionList,
-      send_email:sendEmailRef.current.checked,
+      send_email: sendEmailRef.current.checked,
       rules: JSON.stringify({ conditions, effects }),
       users: {},
     };
@@ -337,17 +343,36 @@ function Billing() {
             <Title>Rules</Title>
             <Box px={20}>
               <Title>Conditions</Title>
-              <Box px={10} mb={5}>
+              <Box px={10} mb={10}>
                 {conditions.map((item, index) => {
                   return (
-                    <ConditionFlex
-                      item={item}
-                      set={setConditions}
-                      key={index}
-                      index={index}
-                    />
+                    <>
+                      {index != 0 && (
+                        <Divider
+                          ml={4}
+                          orientation={"vertical"}
+                          h={"50px"}
+                          w={"1px"}
+                          backgroundColor={"grey"}
+                        />
+                      )}
+                      <ConditionFlex
+                        item={item}
+                        set={setConditions}
+                        key={index}
+                        index={index}
+                      />
+                    </>
                   );
                 })}
+                <Divider
+                  ml={4}
+                  mb={1}
+                  orientation={"vertical"}
+                  h={"50px"}
+                  w={"1px"}
+                  backgroundColor={"grey"}
+                />
                 <AiOutlinePlusCircle
                   size={30}
                   onClick={() => {
@@ -359,14 +384,33 @@ function Billing() {
               <Box px={10} mb={5}>
                 {effects.map((item, index) => {
                   return (
-                    <EffectFlex
-                      item={item}
-                      set={setEffects}
-                      key={index}
-                      index={index}
-                    />
+                    <>
+                      {index != 0 && (
+                        <Divider
+                          ml={4}
+                          orientation={"vertical"}
+                          h={"50px"}
+                          w={"1px"}
+                          backgroundColor={"grey"}
+                        />
+                      )}
+                      <EffectFlex
+                        item={item}
+                        set={setEffects}
+                        key={index}
+                        index={index}
+                      />
+                    </>
                   );
                 })}
+                <Divider
+                  ml={4}
+                  mb={1}
+                  orientation={"vertical"}
+                  h={"50px"}
+                  w={"1px"}
+                  backgroundColor={"grey"}
+                />
                 <AiOutlinePlusCircle
                   size={30}
                   onClick={() => {
@@ -387,6 +431,7 @@ function Billing() {
                   ></InputLeftElement>
                   <Input placeholder="Search Collections" ref={collectionRef} />
                 </InputGroup>
+                <input type="file" accept="application/JSON" onChange={hanndleUploadChange} />
                 <Button
                   rounded={"md"}
                   onClick={() => {
@@ -399,6 +444,25 @@ function Billing() {
                   Add
                 </Button>
               </HStack>
+              <Box>
+                {collectionList.map((item, index) => {
+                  return (
+                    <Button key={index} mx={1} mb={2}>
+                      {item}{" "}
+                      <MdDeleteForever
+                        onClick={() =>
+                          setCollectionList((prev) =>
+                            prev.filter((collItem) => collItem != item)
+                          )
+                        }
+                        style={{ marginLeft: "0.5rem" }}
+                        size={30}
+                      />{" "}
+                      <button></button>
+                    </Button>
+                  );
+                })}
+              </Box>
             </Box>
           </Card>
           <Card mb={"1em"}>
@@ -413,9 +477,11 @@ function Billing() {
             </Box>
             <Divider mt={5} />
             <Box mt={5}>
-              <Flex direction={"column"} >
-              <Title>Notify Users</Title>
-              <Checkbox px={5} ref={sendEmailRef}>Notify Users via Email</Checkbox>
+              <Flex direction={"column"}>
+                <Title>Notify Users</Title>
+                <Checkbox px={5} ref={sendEmailRef}>
+                  Notify Users via Email
+                </Checkbox>
               </Flex>
             </Box>
           </Card>
@@ -468,7 +534,10 @@ function ConditionFlex({ item: { pre, equ, suf }, set, index }) {
     arrIdx: index,
   };
   return (
-    <Flex ml={-10} mb={5}>
+    <Flex ml={2} mb={1} alignItems={"center"}>
+      <Text mr={3} ml={index == 0 ? 0 : -6} fontSize={20} color={"#4287f5"}>
+        {index == 0 ? "IF" : "AND"}
+      </Text>
       <NewMenu
         items={preconditions}
         menuItem={pre}
@@ -488,7 +557,10 @@ function EffectFlex({ item: { effect, offer }, set, index }) {
     arrIdx: index,
   };
   return (
-    <Flex ml={-10} mb={5}>
+    <Flex ml={2} mb={1} alignItems={"center"}>
+      <Text mr={3} ml={index == 0 ? -7 : -5} fontSize={20} color={"#4287f5"}>
+        {index == 0 ? "THEN" : "AND"}
+      </Text>
       <NewMenu
         items={couponType}
         menuItem={effect}
@@ -616,6 +688,22 @@ function Title(props) {
       {props.children}
     </Text>
   );
+}
+
+export function Upload() {
+  const [files, setFiles] = useState("");
+
+  const handleChange = (e) => {
+    const fileReader = new FileReader();
+    fileReader.readAsText(e.target.files[0], "UTF-8");
+    fileReader.onload = (e) => {
+      const jsonResult = JSON.parse(e.target.result);
+      const emails = jsonResult.map((item, index) => item.Email);
+      console.log("e.target.result", emails);
+      setFiles(emails);
+    };
+  };
+  return [files, handleChange];
 }
 
 export default Billing;
