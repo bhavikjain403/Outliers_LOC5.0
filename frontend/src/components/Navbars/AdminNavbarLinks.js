@@ -55,7 +55,7 @@ export default function HeaderLinks(props) {
     AuthApi.Logout(user)
     setUser(null);
     localStorage.removeItem("user");
-    return history.push("/auth/signin");
+    return history.push("/home");
   }
 
   return (
@@ -65,6 +65,28 @@ export default function HeaderLinks(props) {
       alignItems="center"
       flexDirection="row"
     >
+      <Button
+        ms="0px"
+        px="0px"
+        onClick={handleLogout}
+        me={{ sm: "2px", md: "16px" }}
+        color={navbarIcon}
+        variant="transparent-with-icon"
+        rightIcon={
+          document.documentElement.dir ? (
+            ""
+          ) : (
+            <>Log Out</>
+          )
+        }
+        leftIcon={
+          document.documentElement.dir ? (
+            <>Log Out</>
+          ) : (
+            ""
+          )
+        }
+      ></Button>
       <SidebarResponsive
         logoText={props.logoText}
         secondary={props.secondary}

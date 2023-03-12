@@ -140,7 +140,8 @@ export default function Configurator(props) {
       </Text>
       <Link
         w="100%"
-        href="https://github.com/app-generator/react-purity-dashboard"
+        href="https://documenter.getpostman.com/view/17263120/2s93JtQPPx"
+        target="_blank"
       >
         <Button
           fontSize="10px"

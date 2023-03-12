@@ -26,11 +26,14 @@ import AdminLayout from "layouts/Admin.js";
 import RTLLayout from "layouts/RTL.js";
 import LoginPage from "components/Home/LoginPage";
 
+import { Toaster } from 'react-hot-toast';
+
 let user = localStorage.getItem("user");
 user = JSON.parse(user);
 
 ReactDOM.render(
   <AuthProvider userData={user}>
+    <Toaster/>
     <HashRouter>
       <Switch>
         <Route path={`/auth`} component={AuthLayout} />
