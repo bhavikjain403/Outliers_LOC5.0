@@ -13,9 +13,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 // assets
-import peopleImage from "assets/img/people-image.png";
-import logoChakra from "assets/svg/logo-white.svg";
-import BarChart from "components/Charts/BarChart";
 import LineChart from "components/Charts/LineChart";
 import Card from "components/Card/Card";
 // Custom icons
@@ -27,20 +24,10 @@ import {
 } from "components/Icons/Icons.js";
 import React, { useState, useEffect } from "react";
 import { dashboardTableData, timelineData } from "variables/general";
-import ActiveUsers from "./components/ActiveUsers";
-import BuiltByDevelopers from "./components/BuiltByDevelopers";
 import MiniStatistics from "./components/MiniStatistics";
 import OrdersOverview from "./components/OrdersOverview";
 import Projects from "./components/Projects";
 import SalesOverview from "./components/SalesOverview";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 
@@ -186,13 +173,13 @@ export default function Dashboard() {
       </Grid>
 
       {/* PIE CHART */}
-      <Grid height={"450px"} paddingY={5}>
+      {/* <Grid height={"450px"} paddingY={5}>
         <Card height={"420px"} paddingY={5}>
           <Flex>
             <CanvasJSChart options={options} />
           </Flex>
         </Card>
-      </Grid>
+      </Grid> */}
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
