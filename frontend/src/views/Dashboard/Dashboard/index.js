@@ -31,6 +31,8 @@ import SalesOverview from "./components/SalesOverview";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
 
+import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer } from "recharts";
+
 import CanvasJSReact from "./canvasjs.react";
 //var CanvasJSReact = require('./canvasjs.react');
 var CanvasJS = CanvasJSReact.CanvasJS;
