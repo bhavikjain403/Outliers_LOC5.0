@@ -186,13 +186,6 @@ export default function Dashboard() {
       </Grid>
 
       {/* PIE CHART */}
-      {/* <Grid height={"450px"} paddingY={5}>
-        <Card height={"420px"} paddingY={5}>
-          <Flex>
-            <CanvasJSChart options={options} />
-          </Flex>
-        </Card>
-      </Grid> */}
       <Grid
         templateColumns={{ sm: "1fr", lg: "1.3fr 1.7fr" }}
         templateRows={{ sm: "repeat(2, 1fr)", lg: "1fr" }}
@@ -249,11 +242,13 @@ export default function Dashboard() {
             </Button>
           </Card>
         </Grid>
-        <SalesOverview
-          title={"Sales Overview"}
-          percentage={5}
-          chart={<LineChart />}
-        />
+        <Grid height={"500px"}>
+        <Card height={"100%"}>
+          <Flex>
+            <CanvasJSChart options={options} />
+          </Flex>
+        </Card>
+      </Grid>
       </Grid>
       {/* <Grid
         templateColumns={{ sm: "1fr", md: "1fr 1fr", lg: "2fr 1fr" }}
