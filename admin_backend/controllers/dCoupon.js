@@ -21,36 +21,28 @@ const generateDCoupon = async (req, res) => {
     const code = voucher_codes.generate({
       pattern: `ICO-${company}-####`,
     });
-    let coupon = await DCoupon.findOne({ code: req.body.coupon_code });
-    if (coupon) {
-      res.status(400).json({
-        message: "Coupon Already Exists!",
-        status: false,
-        data: {
-          coupon: coupon,
-        },
-      });
-      return;
-    } else {
+
       var temp = req.body
       temp['code'] = code[0]
 
-      if(req.body.rules!=null || req.body.rules!=undefined){
-
-        for(var i=0; i<temp['rules']['conditions'].length;i++){
-          switch(temp['rules']['conditions'][i]['pre']){
-            case 'cart-value' :
-              temp['min_cart_amt'] = temp['rules']['conditions'][i]['suf']
-            case 'region' :
-              temp['region'] = temp['rules']['conditions'][i]['suf']
-            case 'loyalty-points' :
-              temp['loyalty_pts'] = temp['rules']['conditions'][i]['suf']
-            default:
-              console.log(temp)
+      if(req.body.rules!=null || req.body.rules!=undefined || req.body.rules!={}){
+        if(temp['rules']['conditions']!=undefined){
+          for(var i=0; i<temp['rules']['conditions'].length;i++){
+            switch(temp['rules']['conditions'][i]['pre']){
+              case 'cart-value' :
+                temp['min_cart_amt'] = temp['rules']['conditions'][i]['suf']
+              case 'region' :
+                temp['region'] = temp['rules']['conditions'][i]['suf']
+              case 'loyalty-points' :
+                temp['loyalty_pts'] = temp['rules']['conditions'][i]['suf']
+              default:
+                console.log(temp)
+            }
           }
         }
 
-        if(req.body.rules['effects']!=[]){
+
+        if(req.body.rules['effects']!=undefined){
           temp['type'] = req.body.rules['effects'][0]['effect']
           temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
         }
@@ -60,8 +52,9 @@ const generateDCoupon = async (req, res) => {
       await newCoupon.save();
 
       let img = await QRCode.toDataURL(newCoupon.code);
-
-      if(temp['send_email']){
+      console.log(temp['send_email'])
+      console.log(temp['user_list'])
+      if(temp['send_email']==true){
         const emailSuccess = await sendEmail({
         subject: `Your Coupon Code is : `,
         emailId: temp['user_list'],
@@ -82,7 +75,6 @@ const generateDCoupon = async (req, res) => {
         },
       });
     }
-  }
   catch (err) {
     res.status(400).json({
       message: err.message,
@@ -90,6 +82,7 @@ const generateDCoupon = async (req, res) => {
     });
   }
 }
+
 
 const   verifyDCoupon = async (req, res) => {
   try {
