@@ -18,6 +18,7 @@ user = JSON.parse(user);
 ReactDOM.render(
   <AuthProvider userData={user}>
     <HashRouter>
+      <Toaster />
       <Switch>
         <Route path={`/auth`} component={AuthLayout} />
         <Route path={`/admin`} component={AdminLayout} />

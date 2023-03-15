@@ -57,6 +57,7 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    toast.promise(
     AuthApi.Login(formData)
       .then((response) => {
         if (response.data) {
@@ -70,7 +71,13 @@ export default function Login() {
           return setError(error.response.data.msg);
         }
         return setError("There has been an error.");
-      });
+      })
+      ,{
+        loading: 'Signing in...',
+        success: <b>Signed in!</b>,
+        error: <b>Some error has occured</b>,
+      }
+    )
   };
 
   const setProfile = (response) => {
