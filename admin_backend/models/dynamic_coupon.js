@@ -48,7 +48,7 @@ const dynamicCouponSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["cashback", "free", "percent", "amount"]
+      enum: ["cashback", "free", "percent", "amount", "discount"]
     },
 
     product_categories : {

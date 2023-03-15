@@ -32,7 +32,7 @@ import routes from "routes.js";
 import { useAuth } from "../../auth-context/auth.context";
 import AuthApi from "../../api/auth";
 import { useHistory } from "react-router-dom";
-import {toast} from 'react-hot-toast'
+import {toast} from 'react-toastify'
 
 export default function HeaderLinks(props) {
   const { variant, children, fixed, secondary, onOpen, ...rest } = props;
@@ -53,7 +53,7 @@ export default function HeaderLinks(props) {
   const settingsRef = React.useRef();
 
   const handleLogout = () => {
-    toast("Logging out...")
+    const id=toast("Logged out!")
     AuthApi.Logout(user)
     setUser(null);
     localStorage.removeItem("user");

@@ -18,7 +18,7 @@ import { useHistory } from "react-router-dom";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 function Copyright(props) {
   return (
@@ -57,10 +57,11 @@ export default function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    toast.promise(
+    const id=toast.loading("Signing in...")
     AuthApi.Login(formData)
       .then((response) => {
         if (response.data) {
+          toast.update(id, { render: "Signed in!", type: "success", isLoading: false, autoClose: 3000 });
           return setProfile(response);
         } else {
           setError(response.data.msg);
@@ -68,16 +69,17 @@ export default function Login() {
       })
       .catch((error) => {
         if (error.response) {
+          toast.update(id, { render: "Some error has occured", type: "error", isLoading: false, autoClose: 3000 });
           return setError(error.response.data.msg);
         }
         return setError("There has been an error.");
       })
-      ,{
-        loading: 'Signing in...',
-        success: <b>Signed in!</b>,
-        error: <b>Some error has occured</b>,
-      }
-    )
+    //   ,{
+    //     pending: 'Signing in...',
+    //     success: 'Signed in!',
+    //     error: 'Some error has occured',
+    //   }
+    // )
   };
 
   const setProfile = (response) => {

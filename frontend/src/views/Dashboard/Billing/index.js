@@ -58,7 +58,7 @@ import { FiSearch } from "react-icons/fi";
 import { SearchIcon } from "@chakra-ui/icons";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 function Billing() {
   const [value, setValue] = React.useState("static");
@@ -128,7 +128,7 @@ function Billing() {
       type: discountType,
       users: {},
     };
-    toast("Saving Coupon");
+    const id=toast.loading("Creating Coupon...")
     CouponApi.generateStaticCoupon(data)
       .then((response) => {
         console.log(response.data.data);
@@ -139,27 +139,27 @@ function Billing() {
           expires_at: new Date(item.expires_at),
           active: !item.expired,
         }));
-        toast.success("Coupon saved!");
+        toast.update(id, { render: "Coupon created!", type: "success", isLoading: false, autoClose: 3000 });
         setCoupons(couponseFormatted);
       })
       .catch((error) => {
-        toast.error("Could not save");
+        toast.update(id, { render: "Coupon created!", type: "success", isLoading: false, autoClose: 3000 });
         console.log("error");
       });
   }
 
   function generateDCoupon() {
     const data = {
-      company_name: user?.data?.user?.company,
-      creator_email: user?.data?.user?.email,
+      company_name: user?.data?.user?.company || user?.company,
+      creator_email: user?.data?.user?.email || user?.email,
       expires_at: new Date(Date.parse(endDateRef.current.value)),
       expired: false,
       user_list: collectionList,
       send_email: sendEmailRef.current.checked,
-      rules: JSON.stringify({ conditions, effects }),
+      rules: { conditions, effects },
       users: {},
     };
-    toast("Saving Coupon");
+    const id=toast.loading("Creating Coupon...")
     CouponApi.generateDynamicCoupon(data)
       .then((response) => {
         console.log(response.data.data);
@@ -170,12 +170,12 @@ function Billing() {
           expires_at: new Date(item.expires_at),
           active: !item.expired,
         }));
-        toast.success("Coupon saved!");
+        toast.update(id, { render: "Coupon created!", type: "success", isLoading: false, autoClose: 3000 });
         setCoupons(couponseFormatted);
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Could not save");
+        toast.update(id, { render: "Coupon created!", type: "success", isLoading: false, autoClose: 3000 });
       });
   }
 
@@ -228,7 +228,7 @@ function Billing() {
                 <Title>Discount Code</Title>
                 <HStack marginBottom={2}>
                   <Input ref={couponRef}></Input>
-                  <Button rounded={"md"}>Generate</Button>
+                  {/* <Button rounded={"md"}>Generate</Button> */}
                 </HStack>
                 <Text fontSize={15} textColor="gray">
                   Customers must enter this code at checkout
