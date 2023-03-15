@@ -111,6 +111,7 @@ const generateDCoupon = async (req, res) => {
  }
 }
 
+
 const   verifyDCoupon = async (req, res) => {
   try {
     let coupon = await DCoupon.findOne({ code: req.body.coupon_code, company_name: req.body.company_name});
