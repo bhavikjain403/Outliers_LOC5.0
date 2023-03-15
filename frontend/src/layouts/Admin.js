@@ -79,7 +79,7 @@ export default function Dashboard(props) {
 			}
 			if (prop.layout === '/admin') {
 				if(prop.protected){
-					return <Route path={prop.layout + prop.path} component={prop.component} key={key} />
+					return <ProtectedRoute path={prop.layout + prop.path} component={prop.component} key={key} />
 				}
 				return <Route path={prop.layout + prop.path} component={prop.component} key={key} />;
 			} else {

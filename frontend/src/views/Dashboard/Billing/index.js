@@ -58,6 +58,7 @@ import { FiSearch } from "react-icons/fi";
 import { SearchIcon } from "@chakra-ui/icons";
 import CouponApi from "api/coupons";
 import { useAuth } from "auth-context/auth.context";
+import { toast } from "react-hot-toast";
 
 function Billing() {
   const [value, setValue] = React.useState("static");
@@ -127,6 +128,7 @@ function Billing() {
       type: discountType,
       users: {},
     };
+    toast("Saving Coupon");
     CouponApi.generateStaticCoupon(data)
       .then((response) => {
         console.log(response.data.data);
@@ -137,10 +139,12 @@ function Billing() {
           expires_at: new Date(item.expires_at),
           active: !item.expired,
         }));
+        toast.success("Coupon saved!");
         setCoupons(couponseFormatted);
       })
       .catch((error) => {
-        console.log(error);
+        toast.error("Could not save");
+        console.log("error");
       });
   }
 
@@ -155,6 +159,7 @@ function Billing() {
       rules: JSON.stringify({ conditions, effects }),
       users: {},
     };
+    toast("Saving Coupon");
     CouponApi.generateDynamicCoupon(data)
       .then((response) => {
         console.log(response.data.data);
@@ -165,10 +170,12 @@ function Billing() {
           expires_at: new Date(item.expires_at),
           active: !item.expired,
         }));
+        toast.success("Coupon saved!");
         setCoupons(couponseFormatted);
       })
       .catch((error) => {
         console.log(error);
+        toast.error("Could not save");
       });
   }
 
@@ -431,7 +438,11 @@ function Billing() {
                   ></InputLeftElement>
                   <Input placeholder="Search Collections" ref={collectionRef} />
                 </InputGroup>
-                <input type="file" accept="application/JSON" onChange={hanndleUploadChange} />
+                <input
+                  type="file"
+                  accept="application/JSON"
+                  onChange={hanndleUploadChange}
+                />
                 <Button
                   rounded={"md"}
                   onClick={() => {

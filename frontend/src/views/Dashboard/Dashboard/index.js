@@ -132,8 +132,12 @@ export default function Dashboard() {
     ],
   };
 
+  useEffect(()=>{
+    console.log("coupon",coupon)
+  },[coupon])
+
   useEffect(() => {
-    CouponApi.getAllStaticCoupons(user?.data?.user?.company)
+    CouponApi.getAllStaticCoupons(user?.data?.user?.company || user?.company)
       .then((response) => {
         // console.log(response.data.data);
         const couponsFormatted = response.data.data.map((item, index) => ({
