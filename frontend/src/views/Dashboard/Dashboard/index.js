@@ -45,19 +45,9 @@ const defaultFormFields = {
   recency: "",
 };
 
-const COLORS = [
-  "#AA77FF",
-  "#C9EEFF",
-  "#3F497F",
-  "#FDD36A",
-  "#9DC08B",
-  "#9E4784",
-  "#D27685",
-  "#DF7857",
-  "#0E8388",
-];
-
 export default function Dashboard() {
+  const [COLORS, setCOLORS] = useState([]);
+
   const iconBoxInside = useColorModeValue("white", "white");
 
   const [coupon, setCoupons] = useState([]);
@@ -132,10 +122,6 @@ export default function Dashboard() {
     ],
   };
 
-  useEffect(()=>{
-    console.log("coupon",coupon)
-  },[coupon])
-
   useEffect(() => {
     CouponApi.getAllStaticCoupons(user?.data?.user?.company || user?.company)
       .then((response) => {
@@ -146,7 +132,14 @@ export default function Dashboard() {
           fill: COLORS[COLORS.length % (index + 1)],
         }));
         setCoupons(couponsFormatted);
-        // console.log(couponsFormatted);
+        let tempColors = [];
+        for (let a = 0; a < couponsFormatted.length; a++) {
+          tempColors.push(
+            "#" +
+              (((1 << 24) * Math.random()) | 0).toString(16).padStart(6, "0")
+          );
+        }
+        setCOLORS(tempColors);
       })
       .catch((error) => {
         console.log(error);
