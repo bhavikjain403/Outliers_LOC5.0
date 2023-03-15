@@ -15,13 +15,13 @@ var csv = require("csvtojson");
 const fs = require("fs");
 
 const generateDCoupon = async (req, res) => {
-  try {
+  try{
     var company = req.body.company_name
     company = company.substring(0, 3)
     const code = voucher_codes.generate({
       pattern: `ICO-${company}-####`,
     });
-    let coupon = await DCoupon.findOne({ code: req.body.coupon_code });
+    let coupon = await DCoupon.findOne({ code: code });
     if (coupon) {
       res.status(400).json({
         message: "Coupon Already Exists!",
@@ -35,52 +35,72 @@ const generateDCoupon = async (req, res) => {
       var temp = req.body
       temp['code'] = code[0]
 
-      if(req.body.rules!=null || req.body.rules!=undefined){
-
-        for(var i=0; i<temp['rules']['conditions'].length;i++){
-          switch(temp['rules']['conditions'][i]['pre']){
-            case 'cart-value' :
-              temp['min_cart_amt'] = temp['rules']['conditions'][i]['suf']
-            case 'region' :
-              temp['region'] = temp['rules']['conditions'][i]['suf']
-            case 'loyalty-points' :
-              temp['loyalty_pts'] = temp['rules']['conditions'][i]['suf']
-            default:
-              console.log(temp)
+      if(Object.keys(req.body.rules).length!=0){
+        if(req.body.rules.hasOwnProperty('effects') && req.body.rules.hasOwnProperty('conditions')){
+          for(var i=0; i<temp['rules']['conditions'].length;i++){
+            switch(temp['rules']['conditions'][i]['pre']){
+              case 'cart-value' :
+                temp['min_cart_amt'] = temp['rules']['conditions'][i]['suf']
+              case 'region' :
+                temp['region'] = temp['rules']['conditions'][i]['suf']
+              case 'loyalty-points' :
+                temp['loyalty_pts'] = temp['rules']['conditions'][i]['suf']
+              default:
+                console.log(temp)
+            }
           }
+
+
+            temp['type'] = req.body.rules['effects'][0]['effect']
+            temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
+
+
+          let newCoupon = new DCoupon(temp);
+          await newCoupon.save();
+
+          let img = await QRCode.toDataURL(newCoupon.code);
+
+          if(temp['send_email']){
+            const emailSuccess = await sendEmail({
+            subject: `Your Coupon Code is : `,
+            emailId: temp['user_list'],
+            filename: "coupon",
+            fileOptions: {
+              name: "",
+              image_url: img,
+              email: ""
+            },
+          });
+          console.log("email sent")
+          }
+
+          res.status(200).json({
+            message: "Coupon Created Successfully !",
+            status: true,
+            data: {
+              coupon: newCoupon,
+            },
+          });
+
+        }else{
+          res.status(400).json({
+            message: "Conditions and effects must be present !",
+            status: true,
+            data: {
+
+            },
+          });
         }
 
-        if(req.body.rules['effects']!=[]){
-          temp['type'] = req.body.rules['effects'][0]['effect']
-          temp['discount'] = req.body.rules['effects'][0]['offer'] ?? 40
-        }
+      }else{
+        res.status(400).json({
+          message: "Invalid Rules  !",
+          status: true,
+          data: {
+
+          },
+        });
       }
-
-      let newCoupon = new DCoupon(temp);
-      await newCoupon.save();
-
-      let img = await QRCode.toDataURL(newCoupon.code);
-
-      if(temp['send_email']){
-        const emailSuccess = await sendEmail({
-        subject: `Your Coupon Code is : `,
-        emailId: temp['user_list'],
-        filename: "coupon",
-        fileOptions: {
-          name: "",
-          image_url: img,
-          email: ""
-        },
-      });
-      }
-
-      res.status(200).json({
-        message: "Coupon Created Successfully !",
-        status: true,
-        data: {
-          coupon: newCoupon,
-        },
-      });
     }
   }
   catch (err) {
@@ -88,7 +108,7 @@ const generateDCoupon = async (req, res) => {
       message: err.message,
       status: false
     });
-  }
+ }
 }
 
 const   verifyDCoupon = async (req, res) => {
