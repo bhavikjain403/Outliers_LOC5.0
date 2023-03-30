@@ -16,7 +16,7 @@ import { useNavigate } from "react-router";
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import { toast } from "react-hot-toast";
+import { toast } from "react-toastify";
 
 function Copyright(props) {
   return (
@@ -35,7 +35,12 @@ function Copyright(props) {
 
 
 export default function Signup() {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    name:"",
+    email:"",
+    company:"",
+    password:""
+  });
   const [error, setError] = useState("");
 
   const history = useHistory();
@@ -55,14 +60,24 @@ export default function Signup() {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const id=toast.loading("Signing up...")
+    if(formData.password.length<8 || formData.password.length>128) {
+      toast.update(id, { render: "Password length should be between 8-128 characters", type: "error", isLoading: false, autoClose: 2000 });
+      return setError("There has been an error.");
+    }
     AuthApi.Register(formData).then(response => {
       if(response.data) {
+        toast.update(id, { render: "Account created successfully! Please login.", type: "success", isLoading: false, autoClose: 3000 });
         return history.push("/login");
       } else {
         setError("There has been an error.");
       }
     }).catch(error => {
-      setError("There has been an error.");
+      if (error.response) {
+        toast.update(id, { render: "Some error has occured.", type: "error", isLoading: false, autoClose: 3000 });
+        return setError(error.response.data.msg);
+      }
+      return setError("There has been an error.");
     })
   }
 

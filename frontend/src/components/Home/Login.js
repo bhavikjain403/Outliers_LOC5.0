@@ -69,7 +69,7 @@ export default function Login() {
       })
       .catch((error) => {
         if (error.response) {
-          toast.update(id, { render: "Some error has occured", type: "error", isLoading: false, autoClose: 3000 });
+          toast.update(id, { render: "Some error has occured. Please check your email and password.", type: "error", isLoading: false, autoClose: 3000 });
           return setError(error.response.data.msg);
         }
         return setError("There has been an error.");
