@@ -21,4 +21,4 @@ Incento is a promotion engine that enables small and large scale businesses to g
 
 # Awards :
 This project secured first place at Lines of Code 5.0 hackathon.
-(https://raw.githubusercontent.com/bhavikjain403/Outliers_LOC5.0/master/frontend/src/assets/img/loc.jpg)
+(https://raw.githubusercontent.com/bhavikjain403/Outliers_LOC5.0/master/frontend/src/assets/loc.jpg)
