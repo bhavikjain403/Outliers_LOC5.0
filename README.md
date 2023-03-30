@@ -18,3 +18,7 @@ Incento is a promotion engine that enables small and large scale businesses to g
 <br/>Akshit Gabhane: https://github.com/fibre-ether<br/>
 <br/>Prachet Shah: https://github.com/PrachetShah<br/>
 <br/>Ojas Karmarkar: https://github.com/OjasKarmarkar
+
+# Awards :
+This project secured first place at Lines of Code 5.0 hackathon.
+(https://raw.githubusercontent.com/bhavikjain403/Outliers_LOC5.0/master/frontend/src/assets/img/loc.jpg)
